@@ -1,34 +1,112 @@
-import React from 'react'
-import HomeCard from "./HomeCard"
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import React from "react";
+import HomeCard from "./HomeCard";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Fatloss_img from "./image/Fatloss.jpg";
 import Recomp_img from "./image/Recomp.jpg";
 import Weight_gain_img from "./image/weight_gain.jpg";
-import Cardio_img from "./image/Cardio.jpg"
+import Cardio_img from "./image/Cardio.jpg";
+import ResponsiveAppBar from "./ResponsiveAppBar"
+
 const plans = [
-  {title:"Weight-loss",list:["Calorie Deficit", "Nutrition","Exercise"],discription:"Weight loss occurs by creating a calorie deficit through diet, exercise, and lifestyle changes. Sustainable weight loss involves healthy eating, regular physical activity, proper sleep, and stress management for long-term success.",image:Fatloss_img},
-  {title:"Weight-gain",list:["Calorie Surplus", "Strength Training","Progressive Overload"],discription:"Weight gain occurs when calorie intake exceeds expenditure, leading to fat or muscle accumulation. It can result from overeating, lack of exercise, hormonal imbalances, or intentional muscle-building through diet and strength training.",image:Weight_gain_img},
-  {title:"Recomposition",list:["Calorie Balance", "Protein Intake","Recovery"],discription:"Body recomposition focuses on losing fat while gaining muscle simultaneously through strength training, protein-rich nutrition, and a slight calorie deficit or maintenance, prioritizing muscle preservation over pure weight loss.",image:Recomp_img},
-  {title:"Cardio",list:["Endurance", "Stamina","Sweat"],discription:"Cardio exercises improve heart health and burn calories. Examples include running, cycling, swimming, jumping rope, and HIIT. They enhance endurance, boost metabolism, and support weight loss by increasing heart rate and oxygen consumption.",image:Cardio_img}
-]
+  {
+    title: "Weight Loss",
+    list: ["Calorie Deficit", "Nutrition", "Exercise"],
+    description:
+      "Weight loss occurs by creating a calorie deficit through diet, exercise, and lifestyle changes. Sustainable weight loss involves healthy eating, regular physical activity, proper sleep, and stress management for long-term success.",
+    image: Fatloss_img,
+  },
+  {
+    title: "Weight Gain",
+    list: ["Calorie Surplus", "Strength Training", "Progressive Overload"],
+    description:
+      "Weight gain occurs when calorie intake exceeds expenditure, leading to fat or muscle accumulation. It can result from overeating, lack of exercise, hormonal imbalances, or intentional muscle-building through diet and strength training.",
+    image: Weight_gain_img,
+  },
+  {
+    title: "Recomposition",
+    list: ["Calorie Balance", "Protein Intake", "Recovery"],
+    description:
+      "Body recomposition focuses on losing fat while gaining muscle simultaneously through strength training, protein-rich nutrition, and a slight calorie deficit or maintenance, prioritizing muscle preservation over pure weight loss.",
+    image: Recomp_img,
+  },
+  {
+    title: "Cardio",
+    list: ["Endurance", "Stamina", "Sweat"],
+    description:
+      "Cardio exercises improve heart health and burn calories. Examples include running, cycling, swimming, jumping rope, and HIIT. They enhance endurance, boost metabolism, and support weight loss by increasing heart rate and oxygen consumption.",
+    image: Cardio_img,
+  },
+];
+
 export default function Home() {
   return (
-    <div >
-      <h1>Welcome to a complete Fitness tracker</h1>
-      <p>Here we have designed plans for you to get your fitness goals</p>
-      <Container >
-        <h2 style={{ textAlign: "center" }}>Plans</h2>
-      <Row>
-        <Col><HomeCard title={plans[0].title} text={plans[0].discription} img={plans[0].image} list0={plans[0].list[0]} list1={plans[0].list[1]} list2={plans[0].list[2]}/></Col>
-        <Col><HomeCard title={plans[1].title} text={plans[1].discription} img={plans[1].image} list0={plans[1].list[0]} list1={plans[1].list[1]} list2={plans[1].list[2]}/></Col>
-      </Row>
-      <Row>
-        <Col><HomeCard title={plans[2].title} text={plans[2].discription} img={plans[2].image} list0={plans[2].list[0]} list1={plans[2].list[1]} list2={plans[2].list[2]}/></Col>
-        <Col><HomeCard title={plans[3].title} text={plans[3].discription} img={plans[3].image} list0={plans[3].list[0]} list1={plans[3].list[1]} list2={plans[3].list[2]}/></Col>
-      </Row>
-    </Container>
+    <div
+      style={{
+        textAlign: "center",
+        paddingTop: "100px",
+        backgroundColor: "#f5f5f5",
+        minHeight: "100vh",
+      }}
+    >
+      <Container>
+        <ResponsiveAppBar/>
+        <h1
+          style={{
+            fontSize: "2.5rem",
+            fontWeight: "bold",
+            color: "#333",
+            marginBottom: "10px",
+          }}
+        >
+          Welcome to Your Fitness Tracker
+        </h1>
+        <p
+          style={{
+            fontSize: "1.2rem",
+            color: "#666",
+            maxWidth: "600px",
+            margin: "auto",
+            marginBottom: "30px",
+          }}
+        >
+          Choose a plan and achieve your fitness goals with structured workouts
+          and proper nutrition.
+        </p>
+
+        <h2
+          style={{
+            textAlign: "center",
+            fontSize: "2rem",
+            color: "#444",
+            marginBottom: "20px",
+          }}
+        >
+          Plans
+        </h2>
+
+        <Row className="justify-content-center">
+          {plans.map((plan, index) => (
+            <Col
+              key={index}
+              xs={12}
+              md={6}
+              lg={4}
+              style={{ marginBottom: "20px" }}
+            >
+              <HomeCard
+                title={plan.title}
+                text={plan.description}
+                img={plan.image}
+                list0={plan.list[0]}
+                list1={plan.list[1]}
+                list2={plan.list[2]}
+              />
+            </Col>
+          ))}
+        </Row>
+      </Container>
     </div>
-  )
+  );
 }
