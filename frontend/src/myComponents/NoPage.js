@@ -4,7 +4,7 @@ import error from './image/error.gif'
 const NoPage = () => {
   return (
     <div>
-      NO Page thanks
+      NO Page thanks HUHHHHHHHHHHHHH
       <img src={error} alt="rick roll baby!!!!!"/>
     </div>
   )
