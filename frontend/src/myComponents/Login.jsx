@@ -8,26 +8,54 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (!storedUser || storedUser.username !== username || storedUser.password !== password) {
-      setError("Invalid username or password!");
-      return;
+      if (!response.ok) {
+        throw new Error("Invalid username or password");
+      }
+
+      const data = await response.json();
+
+      // Store authentication token (if applicable)
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("isLoggedIn", "true");
+
+      alert("Login successful!");
+      navigate("/"); // Redirect to home page
+    } catch (err) {
+      setError(err.message);
     }
-    
-    setError("");
-    alert("Login successful!");
-    
-    // Save login state (Replace with real authentication logic)
-    localStorage.setItem("isLoggedIn", "true");
-    
-    navigate("/"); // Redirect to home page
   };
 
   return (
-    <Container maxWidth="xs">
-      <Box sx={{ mt: 5, p: 3, border: "1px solid #ccc", borderRadius: 3 }}>
+    <Container 
+      maxWidth="xs"
+      sx={{
+        height: "100vh", // Full screen height
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Box 
+        sx={{ 
+          p: 4, 
+          border: "1px solid #ccc", 
+          borderRadius: 3, 
+          boxShadow: 3,
+          width: "100%",
+          maxWidth: "400px",
+          bgcolor: "white",
+        }}
+      >
         <Typography variant="h5" textAlign="center">Login</Typography>
         
         <TextField
@@ -47,7 +75,7 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
         
-        {error && <Typography color="error">{error}</Typography>}
+        {error && <Typography color="error" textAlign="center">{error}</Typography>}
         
         <Button
           fullWidth

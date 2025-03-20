@@ -93,24 +93,8 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
 
-          {/* Logo for mobile */}
+          {/* Logo for mobile - Removed "GYM" text */}
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component={Link}
-            to="/"
-            sx={{
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            GYM
-          </Typography>
 
           {/* Desktop Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

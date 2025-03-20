@@ -1,26 +1,48 @@
-import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
 
-
-function HomeCard(props) {
+function HomeCard({ img, title, text, list0, list1, list2, link, linkText }) {
   return (
-    <Card style={{ width: '20rem' }}>
-      <Card.Img variant="top" src={props.img} />
+    <Card
+      style={{
+        width: "22rem",
+        borderRadius: "12px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        overflow: "hidden",
+      }}
+    >
+      <div style={{ width: "100%", height: "200px", overflow: "hidden" }}>
+        <Card.Img
+          variant="top"
+          src={img}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain", // Prevents cropping
+            backgroundColor: "#f8f9fa", // Light background for transparent images
+          }}
+        />
+      </div>
+
       <Card.Body>
-        <Card.Title>{props.title}</Card.Title>
-        <Card.Text>
-          {props.text}
-        </Card.Text>
+        <Card.Title className="fw-bold">{title}</Card.Title>
+        <Card.Text className="text-muted">{text}</Card.Text>
       </Card.Body>
-      <ListGroup className="list-group-flush">
-      <ListGroup.Item><b>Factors</b></ListGroup.Item>
-        <ListGroup.Item>{props.list0}</ListGroup.Item>
-        <ListGroup.Item>{props.list1}</ListGroup.Item>
-        <ListGroup.Item>{props.list2}</ListGroup.Item>
+
+      <ListGroup variant="flush" className="px-3">
+        <ListGroup.Item className="fw-bold bg-light">Factors</ListGroup.Item>
+        {list0 && <ListGroup.Item>{list0}</ListGroup.Item>}
+        {list1 && <ListGroup.Item>{list1}</ListGroup.Item>}
+        {list2 && <ListGroup.Item>{list2}</ListGroup.Item>}
       </ListGroup>
-      <Card.Body>
-        <Card.Link href="#">Card Link</Card.Link>
-      </Card.Body>
+
+      {link && (
+        <Card.Body className="text-center">
+          <Card.Link href={link} className="btn btn-primary">
+            {linkText || "Learn More"}
+          </Card.Link>
+        </Card.Body>
+      )}
     </Card>
   );
 }

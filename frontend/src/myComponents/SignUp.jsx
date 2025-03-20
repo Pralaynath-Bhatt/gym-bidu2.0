@@ -9,23 +9,53 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
-    setError("");
-    
-    // Save user info (replace with real authentication logic)
-    localStorage.setItem("user", JSON.stringify({ username, password }));
-    
-    alert("Account created successfully! Please log in.");
-    navigate("/login"); // Redirect to login page
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Sign up failed. Try a different username.");
+      }
+
+      alert("Account created successfully! Please log in.");
+      navigate("/login"); // Redirect to login page after successful signup
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
-    <Container maxWidth="xs">
-      <Box sx={{ mt: 5, p: 3, border: "1px solid #ccc", borderRadius: 3 }}>
+    <Container 
+      maxWidth="xs"
+      sx={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Box 
+        sx={{ 
+          p: 4, 
+          border: "1px solid #ccc", 
+          borderRadius: 3, 
+          boxShadow: 3,
+          width: "100%",
+          maxWidth: "400px",
+          bgcolor: "white",
+        }}
+      >
         <Typography variant="h5" textAlign="center">Sign Up</Typography>
         
         <TextField
@@ -54,7 +84,7 @@ export default function SignUp() {
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
         
-        {error && <Typography color="error">{error}</Typography>}
+        {error && <Typography color="error" textAlign="center">{error}</Typography>}
         
         <Button
           fullWidth
