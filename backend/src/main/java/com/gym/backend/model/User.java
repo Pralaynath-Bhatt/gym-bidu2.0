@@ -1,12 +1,18 @@
 package com.gym.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "gym_users")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -19,10 +25,10 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;  // Hashed password
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, length = 15)
     private String phoneNumber;
 
     // User measurements
@@ -40,44 +46,8 @@ public class User {
     private Double calves;
 
     // Gym plan
-    @Getter
-    private String plan ;
+    private String plan;  // Default plan
 
     @CreationTimestamp
     private LocalDateTime joinDate;
-
-    // Constructors
-    public User() {}
-
-    public User(String username, String passwordHash, String plan) {
-        this.username = username;
-        this.passwordHash = passwordHash;
-        this.plan = plan;
-    }
-
-    // Getters & Setters
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    public String getPasswordHash() { return passwordHash; }
-    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
-    public Double getWeight() { return weight; }
-    public void setWeight(Double weight) { this.weight = weight; }
-
-    public Double getHeight() { return height; }
-    public void setHeight(Double height) { this.height = height; }
-
-    public void setPlan(String plan) { this.plan = plan; }
-
-    public LocalDateTime getJoinDate() { return joinDate; }
 }
