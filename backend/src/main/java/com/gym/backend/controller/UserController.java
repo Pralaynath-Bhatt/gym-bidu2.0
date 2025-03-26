@@ -28,6 +28,10 @@ public class UserController {
         }
     }
 
+    @GetMapping("/hii")
+    public String hii(){
+        return "hiii";
+    }
     // Check if a username exists
     @GetMapping("/exists/username/{username}")
     public ResponseEntity<Boolean> checkUsernameExists(@PathVariable String username) {

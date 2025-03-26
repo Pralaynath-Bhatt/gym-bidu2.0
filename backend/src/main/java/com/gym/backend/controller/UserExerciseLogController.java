@@ -9,10 +9,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user-exercise-log")
-@RequiredArgsConstructor
+
 public class UserExerciseLogController {
 
     private final UserExerciseLogService logService;
+    public UserExerciseLogController(UserExerciseLogService logService) {
+        this.logService = logService;
+    }
 
     @GetMapping
     public List<UserExerciseLog> getAllLogs() {
