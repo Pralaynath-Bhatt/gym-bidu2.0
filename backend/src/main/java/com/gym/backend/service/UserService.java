@@ -1,6 +1,6 @@
 package com.gym.backend.service;
 
-import com.gym.backend.model.User;
+import com.gym.backend.entity.User;
 import java.util.Optional;
 
 public interface UserService {

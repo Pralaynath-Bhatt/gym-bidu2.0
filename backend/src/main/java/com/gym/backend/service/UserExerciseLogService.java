@@ -1,6 +1,6 @@
 package com.gym.backend.service;
 
-import com.gym.backend.model.UserExerciseLog;
+import com.gym.backend.entity.UserExerciseLog;
 import com.gym.backend.repository.UserExerciseLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.gym.backend.controller;
 
-import com.gym.backend.model.Exercise;
+import com.gym.backend.entity.Exercise;
 import com.gym.backend.service.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

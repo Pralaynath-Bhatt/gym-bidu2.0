@@ -1,4 +1,4 @@
-package com.gym.backend.model;
+package com.gym.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,21 +15,21 @@ public class UserExerciseLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long logId;
+    private Long log_id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User user_id;
 
     @ManyToOne
     @JoinColumn(name = "exercise_id", nullable = false)
-    private Exercise exercise;
+    private Exercise exercise_id;
 
     @Column(nullable = false)
-    private LocalDate sessionDate;
+    private LocalDate session_date;
 
     @Column(nullable = false)
-    private Double weightUsed;
+    private Double weight_used;
 
     @Column(nullable = false)
     private Integer reps;

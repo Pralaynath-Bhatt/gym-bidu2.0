@@ -1,4 +1,4 @@
-package com.gym.backend.model;
+package com.gym.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,19 +17,19 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long user_id;
 
     @Column(unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
-    private String passwordHash;  // Hashed password
+    private String password_hash;  // Hashed password
 
     @Column(unique = true, nullable = false)
     private String email;
 
     @Column(unique = true, nullable = false, length = 15)
-    private String phoneNumber;
+    private String phone_number;
 
     // User measurements
     private Double weight;   // kg
@@ -50,4 +50,7 @@ public class User {
 
     @CreationTimestamp
     private LocalDateTime joinDate;
+    private Double bmi;
+
+
 }

@@ -1,8 +1,7 @@
 package com.gym.backend.controller;
 
-import com.gym.backend.model.UserExerciseLog;
+import com.gym.backend.entity.UserExerciseLog;
 import com.gym.backend.service.UserExerciseLogService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

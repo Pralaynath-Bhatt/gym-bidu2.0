@@ -1,6 +1,6 @@
 package com.gym.backend.service;
 
-import com.gym.backend.model.Exercise;
+import com.gym.backend.entity.Exercise;
 import com.gym.backend.repository.ExerciseRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.gym.backend.model;
+package com.gym.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,17 +14,17 @@ public class Exercise {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long exerciseId;
+    private Long exercise_id;
 
     @Column(nullable = false, length = 255)
     private String name;
 
     @Column(nullable = false, length = 100)
-    private String muscleGroup;
+    private String muscle_group;
 
     @Column(nullable = false, length = 100)
-    private String targetMuscle;
+    private String target_muscle;
 
     @Column(length = 255)
-    private String youtubeLink;
+    private String youtube_link;
 }

@@ -1,52 +1,27 @@
 package com.gym.backend.controller;
 
-import com.gym.backend.model.User;
+import com.gym.backend.entity.User;
 import com.gym.backend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:3000") // Allow frontend requests
 public class UserController {
-
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    // Endpoint for user registration
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
         try {
-            User savedUser = userService.registerUser(user);
+            userService.registerUser(user);
             return ResponseEntity.ok("User registered successfully!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
-
-    @GetMapping("/hii")
-    public String hii(){
-        return "hiii";
-    }
-    // Check if a username exists
-    @GetMapping("/exists/username/{username}")
-    public ResponseEntity<Boolean> checkUsernameExists(@PathVariable String username) {
-        return ResponseEntity.ok(userService.existsByUsername(username));
-    }
-
-    // Check if an email exists
-    @GetMapping("/exists/email/{email}")
-    public ResponseEntity<Boolean> checkEmailExists(@PathVariable String email) {
-        return ResponseEntity.ok(userService.existsByEmail(email));
-    }
-
-    // Check if a phone number exists
-    @GetMapping("/exists/phone/{phone}")
-    public ResponseEntity<Boolean> checkPhoneExists(@PathVariable String phone) {
-        return ResponseEntity.ok(userService.existsByPhoneNumber(phone));
     }
 }
