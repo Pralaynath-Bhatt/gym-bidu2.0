@@ -5,8 +5,8 @@ import { TextField, Button, Container, Typography, Box, MenuItem } from "@mui/ma
 export default function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [password, setPassword] = useState("");
+  const [phone_number, setphone_number] = useState("");
+  const [password_hash, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [goal, setGoal] = useState("");
   const [plan, setPlan] = useState("");
@@ -14,7 +14,7 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
-    if (password !== confirmPassword) {
+    if (password_hash !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
@@ -25,7 +25,7 @@ export default function SignUp() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, email, mobile, password, goal, plan }),
+        body: JSON.stringify({ username, email, phone_number, password_hash, goal, plan }),
       });
 
       if (!response.ok) {
@@ -66,9 +66,9 @@ export default function SignUp() {
         
         <TextField fullWidth margin="normal" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
         <TextField fullWidth margin="normal" label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <TextField fullWidth margin="normal" label="Mobile Number" type="tel" value={mobile} onChange={(e) => setMobile(e.target.value)} />
-        <TextField fullWidth type="password" margin="normal" label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <TextField fullWidth type="password" margin="normal" label="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+        <TextField fullWidth margin="normal" label="phone_number Number" type="tel" value={phone_number} onChange={(e) => setphone_number(e.target.value)} />
+        <TextField fullWidth type="password_hash" margin="normal" label="Password" value={password_hash} onChange={(e) => setPassword(e.target.value)} />
+        <TextField fullWidth type="password_hash" margin="normal" label="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         
         <TextField
           select

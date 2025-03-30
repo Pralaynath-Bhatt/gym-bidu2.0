@@ -2,17 +2,18 @@ package com.gym.backend.service;
 
 import com.gym.backend.entity.User;
 import com.gym.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+    @Autowired
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public User registerUser(User user) {
@@ -22,7 +23,7 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use.");
         }
-        user.setPassword_hash(passwordEncoder.encode(user.getPassword_hash())); // Encrypt password
+        user.setPassword_hash(user.getPassword_hash()); // Encrypt password
         return userRepository.save(user);
     }
 }
