@@ -4,7 +4,7 @@ import { TextField, Button, Container, Typography, Box } from "@mui/material";
 
 export default function Login() {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [password_hash, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password_hash }),
       });
 
       if (!response.ok) {
@@ -68,10 +68,10 @@ export default function Login() {
         
         <TextField
           fullWidth
-          type="password"
+          type="password_hasg"
           margin="normal"
           label="Password"
-          value={password}
+          value={password_hash}
           onChange={(e) => setPassword(e.target.value)}
         />
         

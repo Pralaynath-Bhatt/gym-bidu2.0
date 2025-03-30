@@ -66,7 +66,7 @@ export default function SignUp() {
         
         <TextField fullWidth margin="normal" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
         <TextField fullWidth margin="normal" label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <TextField fullWidth margin="normal" label="phone_number Number" type="tel" value={phone_number} onChange={(e) => setphone_number(e.target.value)} />
+        <TextField fullWidth margin="normal" label="Phone Number" type="tel" value={phone_number} onChange={(e) => setphone_number(e.target.value)} />
         <TextField fullWidth type="password_hash" margin="normal" label="Password" value={password_hash} onChange={(e) => setPassword(e.target.value)} />
         <TextField fullWidth type="password_hash" margin="normal" label="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         
