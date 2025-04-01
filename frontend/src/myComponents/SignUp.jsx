@@ -81,7 +81,6 @@ export default function SignUp() {
           <MenuItem value="Weight Loss">Weight Loss</MenuItem>
           <MenuItem value="Muscle Gain">Muscle Gain</MenuItem>
           <MenuItem value="Recomposition">Recomposition</MenuItem>
-          <MenuItem value="Cardio">Cardio</MenuItem>
         </TextField>
 
         <TextField
@@ -92,9 +91,9 @@ export default function SignUp() {
           value={plan_id}
           onChange={(e) => setPlan_id(e.target.value)}
         >
-          <MenuItem value="2">4 days a week</MenuItem>
-          <MenuItem value="3">5 days a week</MenuItem>
-          <MenuItem value="1">6 days a week</MenuItem>
+          <MenuItem value="2">Upper-Lower (4 days a week)</MenuItem>
+          <MenuItem value="3">Upper-Lower-Push-Pull-Legs (5 days a week)</MenuItem>
+          <MenuItem value="1">Push-Pull-Legs (6 days a week)</MenuItem>
         </TextField>
         
         {error && <Typography color="error" textAlign="center">{error}</Typography>}

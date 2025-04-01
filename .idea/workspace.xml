@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5d61d71-224f-4c9f-a19f-0c412ebd39d5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/LoginResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/ExerciseController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/UserExerciseLogController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/homecontroller.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/ExerciseService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/UserExerciseLogService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/Plans.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/Plans.js" afterDir="false" />
-    </list>
+    <list default="true" id="b5d61d71-224f-4c9f-a19f-0c412ebd39d5" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
