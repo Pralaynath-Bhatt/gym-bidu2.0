@@ -4,37 +4,39 @@ import { TextField, Button, Container, Typography, Box } from "@mui/material";
 
 export default function Login() {
   const [username, setUsername] = useState("");
-  const [password_hash, setPassword] = useState("");
+  const [password, setPassword] = useState(""); // "password" instead of "password_hash"
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch("http://localhost:8080/api/users/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", // Ensure we're sending JSON
         },
-        body: JSON.stringify({ username, password_hash }),
+        body: JSON.stringify({ username, password_hash: password }), // Send username and password_hash
       });
-
+  
       if (!response.ok) {
         throw new Error("Invalid username or password");
       }
-
-      const data = await response.json();
-
-      // Store authentication token (if applicable)
-      localStorage.setItem("authToken", data.token);
-      localStorage.setItem("isLoggedIn", "true");
-
-      alert("Login successful!");
+  
+      const data = await response.json(); // Parse JSON response
+  
+      // Store the token and logged-in status in localStorage
+      if (data.token) {
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("isLoggedIn", "true");
+      }
+  
+      alert(data.message); // Show the message from the backend
       navigate("/"); // Redirect to home page
     } catch (err) {
-      setError(err.message);
+      setError(err.message); // Show error message
     }
   };
-
+  
   return (
     <Container 
       maxWidth="xs"
@@ -68,10 +70,10 @@ export default function Login() {
         
         <TextField
           fullWidth
-          type="password_hasg"
+          type="password" // Use standard "password" field
           margin="normal"
           label="Password"
-          value={password_hash}
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         
