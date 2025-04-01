@@ -26,4 +26,5 @@ public class UserService {
         user.setPassword_hash(user.getPassword_hash()); // Encrypt password
         return userRepository.save(user);
     }
+
 }

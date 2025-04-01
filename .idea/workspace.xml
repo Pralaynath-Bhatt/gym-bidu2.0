@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5d61d71-224f-4c9f-a19f-0c412ebd39d5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/entity/UserPrincipal.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/repository/UserDetailsRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/UserDetailsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/entity/Plan.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/entity/PlanExercise.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/repository/PlanExersiceRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/repository/PlanRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/SignUp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/SignUp.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,11 +127,6 @@
           <url>jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/6.2.3/spring-beans-6.2.3.jar!/org/springframework/beans/factory/UnsatisfiedDependencyException.class</url>
           <line>7</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/backend/src/main/java/com/gym/backend/entity/User.java</url>
-          <line>8</line>
-          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

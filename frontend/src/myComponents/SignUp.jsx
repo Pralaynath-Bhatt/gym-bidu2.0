@@ -9,7 +9,7 @@ export default function SignUp() {
   const [password_hash, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [goal, setGoal] = useState("");
-  const [plan, setPlan] = useState("");
+  const [plan_id, setPlan_id] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ export default function SignUp() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, email, phone_number, password_hash, goal, plan }),
+        body: JSON.stringify({ username, email, phone_number, password_hash, goal, plan_id }),
       });
 
       if (!response.ok) {
@@ -89,12 +89,12 @@ export default function SignUp() {
           fullWidth
           margin="normal"
           label="Workout Plan"
-          value={plan}
-          onChange={(e) => setPlan(e.target.value)}
+          value={plan_id}
+          onChange={(e) => setPlan_id(e.target.value)}
         >
-          <MenuItem value="4 days a week">4 days a week</MenuItem>
-          <MenuItem value="5 days a week">5 days a week</MenuItem>
-          <MenuItem value="6 days a week">6 days a week</MenuItem>
+          <MenuItem value="2">4 days a week</MenuItem>
+          <MenuItem value="3">5 days a week</MenuItem>
+          <MenuItem value="1">6 days a week</MenuItem>
         </TextField>
         
         {error && <Typography color="error" textAlign="center">{error}</Typography>}

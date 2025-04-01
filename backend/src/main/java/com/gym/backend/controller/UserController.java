@@ -22,14 +22,19 @@ public class UserController {
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         try {
             userService.registerUser(user);
-            user1= user;
             return ResponseEntity.ok("User registered successfully!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     @PostMapping("/login")
-    public String loginUser(){
-        return "mai hu pranjal";
+    public ResponseEntity<String> loginUser(@RequestBody User user){
+        try{
+            userService.registerUser(user);
+            return ResponseEntity.ok("User registered successfully!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        }
     }
 }
