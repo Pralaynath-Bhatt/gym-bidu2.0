@@ -28,6 +28,8 @@ export default function Login() {
       if (data.token) {
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
       }
   
       alert(data.message); // Show the message from the backend

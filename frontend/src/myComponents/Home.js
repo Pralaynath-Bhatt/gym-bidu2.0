@@ -30,14 +30,7 @@ const plans = [
     description:
       "Body recomposition focuses on losing fat while gaining muscle simultaneously through strength training, protein-rich nutrition, and a slight calorie deficit or maintenance, prioritizing muscle preservation over pure weight loss.",
     image: Recomp_img,
-  },
-  {
-    title: "Cardio",
-    list: ["Endurance", "Stamina", "Sweat"],
-    description:
-      "Cardio exercises improve heart health and burn calories. Examples include running, cycling, swimming, jumping rope, and HIIT. They enhance endurance, boost metabolism, and support weight loss by increasing heart rate and oxygen consumption.",
-    image: Cardio_img,
-  },
+  }
 ];
 
 export default function Home() {

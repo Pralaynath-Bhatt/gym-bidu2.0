@@ -16,8 +16,9 @@ import { Link } from "react-router-dom";
 
 const pages = [
   { id: 1, name: "Home", link: "/" },
-  { id: 2, name: "My Workout", link: "/myworkout" },
-  { id: 3, name: "Plans", link: "/plans" },
+  { id: 2, name: "Plans", link: "/plans" },
+  { id: 3, name: "My Workout", link: "/myworkout" },
+  {id:4, name: "My Details", link: "/profile"}
 ];
 
 const settings = ["Profile", "Logout"];

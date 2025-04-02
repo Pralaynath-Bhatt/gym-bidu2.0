@@ -5,6 +5,8 @@ import com.gym.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -35,5 +37,14 @@ public class UserService {
 
         // Compare plain text passwords
         return user.getPassword_hash().equals(password);  // Compare plain text password
+    }
+
+    public User findByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional.orElse(null);
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }

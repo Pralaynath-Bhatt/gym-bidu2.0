@@ -46,7 +46,7 @@ public class User {
     private Double calves;
 
     // Gym plan
-    private long plan_id;  // Default plan
+    private Long plan_id;  // Change from long to Long// Default plan
 
     @CreationTimestamp
     private LocalDateTime joinDate;
