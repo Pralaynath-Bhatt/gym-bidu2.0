@@ -18,7 +18,8 @@ const UserProfile = () => {
     forearm: '',
     thighs: '',
     calves: '',
-    bmi: ''
+    bmi: '',
+    joinDate: '' // Ensure joinDate is included in the initial state
   });
   const [isEditing, setIsEditing] = useState(false);
   const [authDetails, setAuthDetails] = useState({ username: localStorage.getItem("username"), password: localStorage.getItem("password") });
@@ -97,7 +98,9 @@ const UserProfile = () => {
           <div>
             {Object.keys(user).map((key) => (
               key !== 'password_hash' && (
-                <Typography key={key} variant="body1" sx={{ mb: 1 }}><strong>{key.replace("_", " ")}:</strong> {user[key]}</Typography>
+                <Typography key={key} variant="body1" sx={{ mb: 1 }}>
+                  <strong>{key.replace("_", " ")}:</strong> {key === 'joinDate' ? user[key].slice(0, 10) : user[key]}
+                </Typography>
               )
             ))}
             <Button fullWidth variant="contained" color="primary" sx={{ mt: 2 }} onClick={() => setIsEditing(true)}>Edit Profile</Button>
