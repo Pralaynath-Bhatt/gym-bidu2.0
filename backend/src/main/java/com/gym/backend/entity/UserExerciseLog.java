@@ -19,14 +19,15 @@ public class UserExerciseLog {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user_id;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "exercise_id", nullable = false)
-    private Exercise exercise_id;
+    private Exercise exercise;
+
 
     @Column(nullable = false)
-    private LocalDate session_date;
+    private LocalDate date;
 
     @Column(nullable = false)
     private Double weight_used;
