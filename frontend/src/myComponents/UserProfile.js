@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Box, Typography, TextField, Button, MenuItem } from "@mui/material";
 
 const UserProfile = () => {
-  const [user, setUser] = useState({
+  const [user, setUser ] = useState({
     username: '',
     goal: '',
     plan_id: '',
@@ -22,37 +22,44 @@ const UserProfile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [authDetails, setAuthDetails] = useState({ username: localStorage.getItem("username"), password: localStorage.getItem("password") });
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
     setAuthDetails({ username, password });
 
-    if (authDetails.username && authDetails.password) {
-      const auth = "Basic " + btoa(authDetails.username + ":" + authDetails.password);
-      fetch('http://localhost:8080/api/details', {
-        method: "GET",
-        headers: { "Authorization": auth },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to fetch user data");
-          }
-          return response.json();
-        })
-        .then((data) => setUser(data))
-        .catch((error) => console.error('Error fetching user data:', error));
+    if (username && password) {
+      const auth = "Basic " + btoa(username + ":" + password);
+      fetchUserData(auth); // Corrected function name
     }
   }, []);
 
+  const fetchUserData = (auth) => { // Corrected function name
+    fetch('http://localhost:8080/api/details', {
+      method: "GET",
+      headers: { "Authorization": auth },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        return response.json();
+      })
+      .then((data) => setUser (data))
+      .catch((error) => {
+        setError(error.message);
+        console.error('Error fetching user data:', error);
+      });
+  };
+
   const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    setUser ({ ...user, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
+    const { username, password } = authDetails;
 
     if (username && password) {
       const auth = "Basic " + btoa(username + ":" + password);
@@ -70,15 +77,21 @@ const UserProfile = () => {
         .then(() => {
           alert('Profile updated successfully');
           setIsEditing(false);
+          setError(''); // Clear any previous errors
         })
-        .catch((error) => console.error('Error updating user data:', error));
+        .catch((error) => {
+          setError(error.message);
+          console.error('Error updating user data:', error);
+        });
     }
   };
 
   return (
     <Container maxWidth="xs" sx={{ mt: 8, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Box sx={{ p: 4, border: "1px solid #ccc", borderRadius: 3, boxShadow: 3, width: "100%", maxWidth: "400px", bgcolor: "white" }}>
-        <Typography variant="h5" textAlign="center" sx={{ mb: 2 }}>User Profile</Typography>
+        <Typography variant="h5" textAlign="center" sx={{ mb: 2 }}>User  Profile</Typography>
+
+        {error && <Typography color="error" textAlign="center">{error}</Typography>}
 
         <Typography variant="body1" textAlign="center" sx={{ mb: 2 }}>
           <strong>Stored Username:</strong> {authDetails.username} <br />
