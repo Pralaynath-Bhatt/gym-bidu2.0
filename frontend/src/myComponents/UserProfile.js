@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Box, Typography, TextField, Button, MenuItem } from "@mui/material";
+import { Container, Box, Typography, TextField, Button, MenuItem, Card } from "@mui/material";
 
 const UserProfile = () => {
   const [user, setUser ] = useState({
@@ -31,11 +31,11 @@ const UserProfile = () => {
 
     if (username && password) {
       const auth = "Basic " + btoa(username + ":" + password);
-      fetchUserData(auth); // Corrected function name
+      fetchUserData(auth);
     }
   }, []);
 
-  const fetchUserData = (auth) => { // Corrected function name
+  const fetchUserData = (auth) => {
     fetch('http://localhost:8080/api/details', {
       method: "GET",
       headers: { "Authorization": auth },
@@ -87,22 +87,17 @@ const UserProfile = () => {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 8, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Box sx={{ p: 4, border: "1px solid #ccc", borderRadius: 3, boxShadow: 3, width: "100%", maxWidth: "400px", bgcolor: "white" }}>
-        <Typography variant="h5" textAlign="center" sx={{ mb: 2 }}>User  Profile</Typography>
+    <Container maxWidth="xs" sx={{ mt: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: '#f5f5f5', minHeight: '100vh' }}>
+      <Card sx={{ p: 4, borderRadius: 3, boxShadow: 3, width: "100%", bgcolor: "white" }}>
+        <Typography variant="h5" textAlign="center" sx={{ mb: 2, fontWeight: 'bold', color: '#1976d2' }}>User  Profile</Typography>
 
         {error && <Typography color="error" textAlign="center">{error}</Typography>}
-
-        <Typography variant="body1" textAlign="center" sx={{ mb: 2 }}>
-          <strong>Stored Username:</strong> {authDetails.username} <br />
-          <strong>Stored Password:</strong> {authDetails.password}
-        </Typography>
 
         {!isEditing ? (
           <div>
             {Object.keys(user).map((key) => (
-              key !== 'username' && (
-                <Typography key={key} variant="body1"><strong>{key.replace("_", " ")}:</strong> {user[key]}</Typography>
+              key !== 'password_hash' && (
+                <Typography key={key} variant="body1" sx={{ mb: 1 }}><strong>{key.replace("_", " ")}:</strong> {user[key]}</Typography>
               )
             ))}
             <Button fullWidth variant="contained" color="primary" sx={{ mt: 2 }} onClick={() => setIsEditing(true)}>Edit Profile</Button>
@@ -122,7 +117,7 @@ const UserProfile = () => {
             </TextField>
 
             {Object.keys(user).map((key) => (
-              key !== 'username' && key !== 'goal' && key !== 'plan_id' && (
+              key !== 'username' && key !== 'goal' && key !== 'plan_id' && key !== 'joinDate' && key !== 'bmi' && (
                 <TextField key={key} fullWidth margin="normal" label={key.replace("_", " ")} value={user[key]} onChange={handleChange} name={key} />
               )
             ))}
@@ -130,7 +125,7 @@ const UserProfile = () => {
             <Button fullWidth variant="contained" color="primary" sx={{ mt: 2 }} type="submit">Save Changes</Button>
           </form>
         )}
-      </Box>
+      </Card>
     </Container>
   );
 };
