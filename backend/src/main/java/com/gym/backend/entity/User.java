@@ -51,6 +51,9 @@ public class User {
     @CreationTimestamp
     private LocalDateTime joinDate;
     private Double bmi;
+    @Column(name = "goal")
+    private String goal;
+
 
 
 }

@@ -23,11 +23,11 @@ public class PlanExercise {
     @JoinColumn(name = "exercise_id", nullable = false)
     private Exercise exercise;
 
-    @Column(nullable = false)
-    private Integer dayNumber; // Day of workout in the plan
+    @Column(nullable = false,name="day")
+    private Integer day; // Day of workout in the plan
 
-    @Column(nullable = false)
-    private Integer orderNumber; // Order of exercise on that day
+    @Column(nullable = false,name="order")
+    private Integer order; // Order of exercise on that day
 
     // Getters and Setters
 }

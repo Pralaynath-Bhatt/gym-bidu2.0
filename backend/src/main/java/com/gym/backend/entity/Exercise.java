@@ -27,4 +27,5 @@ public class Exercise {
 
     @Column(length = 255)
     private String youtube_link;
-}
+
+   }
