@@ -64,4 +64,4 @@ public class UserExerciseLogService {
         return logRepository.findByUserAndDate(user, sessionDate);
 
     }
-}cd
+}

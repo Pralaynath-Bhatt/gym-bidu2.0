@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5d61d71-224f-4c9f-a19f-0c412ebd39d5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/UserExerciseLogController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/UserExerciseLogService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/myComponents/bettercopyofMyWorkouts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/entity/UserExerciseLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/entity/UserExerciseLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/repository/UserExerciseLogRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/repository/UserExerciseLogRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/UserExerciseLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/service/UserExerciseLogService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
