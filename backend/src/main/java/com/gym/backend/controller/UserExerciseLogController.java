@@ -33,15 +33,32 @@ public class UserExerciseLogController {
     // Save a new exercise log entry
     @PostMapping("/save")
     public ResponseEntity<?> saveExerciseLog(@RequestBody Map<String, Object> request) {
-        Long userId = Long.valueOf(request.get("userId").toString());
-        Long exerciseId = Long.valueOf(request.get("exerciseId").toString());
-        Integer sets = Integer.valueOf(request.get("sets").toString());
-        Integer reps = Integer.valueOf(request.get("reps").toString());
-        Double weight = Double.valueOf(request.get("weight").toString());
+        try {
+            // Validate and extract values safely
+            if (!request.containsKey("userId") || !request.containsKey("exerciseId") ||
+                    !request.containsKey("sets") || !request.containsKey("reps") || !request.containsKey("weight")) {
+                return ResponseEntity.badRequest().body("Missing required fields");
+            }
 
-        UserExerciseLog savedLog = logService.saveExerciseLog(userId, exerciseId, sets, reps, weight);
-        return ResponseEntity.ok(savedLog);
+            Long userId = ((Number) request.get("userId")).longValue();
+            Long exerciseId = ((Number) request.get("exerciseId")).longValue();
+            Integer sets = ((Number) request.get("sets")).intValue();
+            Integer reps = ((Number) request.get("reps")).intValue();
+            Double weight = ((Number) request.get("weight")).doubleValue();
+
+            // Ensure values are valid
+            if (sets <= 0 || reps <= 0 || weight < 0) {
+                return ResponseEntity.badRequest().body("Invalid sets, reps, or weight values");
+            }
+
+            UserExerciseLog savedLog = logService.saveExerciseLog(userId, exerciseId, sets, reps, weight);
+            return ResponseEntity.ok(savedLog);
+
+        } catch (ClassCastException | NullPointerException e) {
+            return ResponseEntity.badRequest().body("Invalid data format: " + e.getMessage());
+        }
     }
+
 
     // Get all logs for a user on a specific date
     @GetMapping("/logs")

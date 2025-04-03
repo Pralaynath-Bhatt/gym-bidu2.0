@@ -3,23 +3,25 @@ import { Container, Box, Typography, Button, Card, CircularProgress, Alert, Text
 import YouTube from "react-youtube";
 
 const MyWorkoutPlan = () => {
+  const [userId, setUserId] = useState(null);
   const [planId, setPlanId] = useState(null);
-  const [days, setDays] = useState(0);
+  const [days, setDays] = useState([]);
   const [selectedDay, setSelectedDay] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const [auth, setAuth] = useState("");
+  const [authDetails, setAuthDetails] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sets, setSets] = useState(0);
-  const [reps, setReps] = useState(0);
-  const [weight, setWeight] = useState(0);
+  const [exerciseLog, setExerciseLog] = useState({ sets: "", reps: "", weight: "" });
 
   useEffect(() => {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
+    setAuthDetails({ username, password });
+
     if (username && password) {
-      setAuth("Basic " + btoa(username + ":" + password));
+      const auth = "Basic " + btoa(username + ":" + password);
+      fetchUserPlan(auth);
     } else {
       setError("Authentication information not found. Please log in again.");
       setLoading(false);
@@ -27,45 +29,39 @@ const MyWorkoutPlan = () => {
   }, []);
 
   useEffect(() => {
-    if (auth) {
-      fetchUserPlan();
-    }
-  }, [auth]);
-
-  useEffect(() => {
     if (exercises.length > 0) {
-      fetchExerciseLog(exercises[currentExerciseIndex].id);
+      fetchLatestExerciseLog(exercises[currentExerciseIndex]?.id);
     }
   }, [currentExerciseIndex, exercises]);
 
-  const fetchUserPlan = () => {
+  const fetchUserPlan = (auth) => {
     setLoading(true);
-    setError(null);
     fetch("http://localhost:8080/api/details", {
       method: "GET",
       headers: { Authorization: auth, "Content-Type": "application/json" },
     })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((res) => res.json())
       .then((data) => {
+        setUserId(data.user_id);
         if (data.plan_id) {
           setPlanId(data.plan_id);
-          fetchWorkoutDays(data.plan_id);
+          fetchWorkoutDays(data.plan_id, auth);
         } else {
           setLoading(false);
-          setError("No workout plan assigned to your account");
+          setError("No workout plan assigned to your account.");
         }
       })
       .catch(() => setError("Error fetching your workout plan. Please try again later."));
   };
 
-  const fetchWorkoutDays = (planId) => {
+  const fetchWorkoutDays = (planId, auth) => {
     fetch(`http://localhost:8080/api/workout-plan/${planId}`, {
       method: "GET",
       headers: { Authorization: auth, "Content-Type": "application/json" },
     })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((res) => res.json())
       .then((data) => {
-        setDays(data.days);
+        setDays(Array.from({ length: data.days }, (_, i) => i + 1));
         setLoading(false);
       })
       .catch(() => setError("Error fetching workout days. Please try again later."));
@@ -75,11 +71,12 @@ const MyWorkoutPlan = () => {
     setSelectedDay(day);
     setCurrentExerciseIndex(0);
     setLoading(true);
+    const auth = "Basic " + btoa(authDetails.username + ":" + authDetails.password);
     fetch(`http://localhost:8080/api/workout-plan/${planId}/day/${day}`, {
       method: "GET",
       headers: { Authorization: auth, "Content-Type": "application/json" },
     })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((res) => res.json())
       .then((data) => {
         setExercises(data);
         setLoading(false);
@@ -87,69 +84,57 @@ const MyWorkoutPlan = () => {
       .catch(() => setError("Error fetching exercises. Please try again later."));
   };
 
-  const fetchExerciseLog = (exerciseId) => {
-    fetch(`http://localhost:8080/api/exercise-log/latest/${exerciseId}`, {
+  const fetchLatestExerciseLog = (exerciseId) => {
+    const auth = "Basic " + btoa(authDetails.username + ":" + authDetails.password);
+    fetch(`http://localhost:8080/api/exercise-log/latest?userId=${userId}&exerciseId=${exerciseId}`, {
       method: "GET",
       headers: { Authorization: auth, "Content-Type": "application/json" },
     })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-      .then((data) => {
-        setSets(data.sets || 0);
-        setReps(data.reps || 0);
-        setWeight(data.weight || 0);
-      })
-      .catch(() => {
-        setSets(0);
-        setReps(0);
-        setWeight(0);
-      });
+      .then((res) => res.json())
+      .then((data) => setExerciseLog(data))
+      .catch(() => setError("Failed to fetch previous exercise log."));
   };
 
   const submitExerciseLog = () => {
-    fetch("http://localhost:8080/api/exercise-log", {
+    const auth = "Basic " + btoa(authDetails.username + ":" + authDetails.password);
+    fetch("http://localhost:8080/api/exercise-log/save", {
       method: "POST",
       headers: { Authorization: auth, "Content-Type": "application/json" },
       body: JSON.stringify({
+        userId: parseInt(userId, 10),
         exerciseId: exercises[currentExerciseIndex].id,
-        sets,
-        reps,
-        weight,
+        sets: parseInt(exerciseLog.sets, 10),
+        reps: parseInt(exerciseLog.reps, 10),
+        weight: parseFloat(exerciseLog.weight),
       }),
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-      .catch(() => setError("Failed to save exercise log. Please try again."));
+    }).catch(() => setError("Failed to save exercise log. Please try again."));
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: { xs: 12, sm: 14 }, mb: 5, pt: 2 }}>
+    <Container maxWidth="sm" sx={{ mt: 5, mb: 5, pt: 2 }}>
       <Card sx={{ p: 3, textAlign: "center", bgcolor: "#fff", boxShadow: 3, borderRadius: 2 }}>
         <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold", color: "#1976d2" }}>
           My Workout Plan
         </Typography>
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         {loading && <CircularProgress sx={{ my: 3 }} />}
-        {!loading && selectedDay && exercises.length > 0 && (
+        {!loading && !error && (
           <Box>
-            <Typography variant="h6" sx={{ mt: 2 }}>
-              {exercises[currentExerciseIndex].name}
-            </Typography>
-            {exercises[currentExerciseIndex].youtube_link && (
-              <Box sx={{ mt: 2 }}>
-                <YouTube videoId={new URL(exercises[currentExerciseIndex].youtube_link).searchParams.get("v")} opts={{ width: "100%" }} />
-              </Box>
-            )}
-            <Box sx={{ mt: 2, display: "flex", justifyContent: "center", gap: 2 }}>
-              <TextField label="Sets" type="number" value={sets} onChange={(e) => setSets(e.target.value)} />
-              <TextField label="Reps" type="number" value={reps} onChange={(e) => setReps(e.target.value)} />
-              <TextField label="Weight" type="number" value={weight} onChange={(e) => setWeight(e.target.value)} />
-            </Box>
-            <Button variant="contained" sx={{ mt: 2 }} onClick={submitExerciseLog}>
-              Save Log
-            </Button>
-            {currentExerciseIndex < exercises.length - 1 && (
-              <Button variant="contained" sx={{ mt: 2, ml: 2 }} onClick={() => setCurrentExerciseIndex((prev) => prev + 1)}>
-                Next Exercise
-              </Button>
+            {selectedDay === null ? (
+              days.map((day) => (
+                <Button key={day} onClick={() => fetchExercisesForDay(day)} sx={{ m: 1 }}>Day {day}</Button>
+              ))
+            ) : (
+              <>
+                <Typography variant="h6">{exercises[currentExerciseIndex]?.name}</Typography>
+                <YouTube videoId={exercises[currentExerciseIndex]?.youtube_link?.split("v=")[1]?.split("&")[0]} />
+                <TextField label="Sets" value={exerciseLog.sets} fullWidth margin="normal" onChange={(e) => setExerciseLog({ ...exerciseLog, sets: e.target.value })} />
+                <TextField label="Reps" value={exerciseLog.reps} fullWidth margin="normal" onChange={(e) => setExerciseLog({ ...exerciseLog, reps: e.target.value })} />
+                <TextField label="Weight (kg)" value={exerciseLog.weight} fullWidth margin="normal" onChange={(e) => setExerciseLog({ ...exerciseLog, weight: e.target.value })} />
+                <Button onClick={() => setCurrentExerciseIndex(Math.max(0, currentExerciseIndex - 1))} sx={{ mt: 2, mr: 2 }} variant="contained">Previous Exercise</Button>
+                <Button onClick={submitExerciseLog} sx={{ mt: 2, mr: 2 }} variant="contained">Save Log</Button>
+                <Button onClick={() => setCurrentExerciseIndex(Math.min(exercises.length - 1, currentExerciseIndex + 1))} sx={{ mt: 2 }} variant="contained">Next Exercise</Button>
+              </>
             )}
           </Box>
         )}

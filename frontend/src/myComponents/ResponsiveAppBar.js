@@ -19,7 +19,8 @@ const pages = [
   { id: 2, name: "Plans", link: "/plans" },
   { id: 3, name: "My Workout", link: "/myworkout" },
   {id:4, name: "My Details", link: "/profile"},
-  {id:4, name: "AI Model", link: "/aimodel"}
+  {id:4, name: "AI Model", link: "/aimodel"},
+  {id:4, name: "Better Workout", link: "/betterworkout"}
 ];
 
 const settings = ["Profile", "Logout"];

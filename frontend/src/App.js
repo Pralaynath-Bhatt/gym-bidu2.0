@@ -6,6 +6,7 @@ import NoPage from "./myComponents/NoPage.js";
 import Login from './myComponents/Login.jsx';
 import SignUp from './myComponents/SignUp.jsx';
 import Piyush from './myComponents/piyush.js';
+import Better from './myComponents/bettercopyofMyWorkouts.js'
 import UserProfile from './myComponents/UserProfile.js';
 import ResponsiveAppBar from "./myComponents/ResponsiveAppBar.js"; // Make sure this is properly imported
 
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/myworkout" element={<MyWorkout />} />
+        <Route path="/betterworkout" element={<Better />} />
         <Route path="/plans" element={<Plans />} />
         <Route path="/aimodel" element={<Piyush />} />
         <Route path="/profile" element={<UserProfile/>}/>

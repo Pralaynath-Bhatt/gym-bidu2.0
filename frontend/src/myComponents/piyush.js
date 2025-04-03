@@ -10,47 +10,87 @@ const Workout = () => {
   const [calories, setCalories] = useState(null);
 
   const handleSaveUser = async () => {
-    const response = await axios.post("http://127.0.0.1:5000/save_user", {
-      age,
-      weight,
-      height,
-    });
-    setBmi(response.data.bmi);
-    setGoal(response.data.goal);
+    if (!age || !weight || !height) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/save_user", {
+        age: parseFloat(age),
+        weight: parseFloat(weight),
+        height: parseFloat(height),
+      });
+      setBmi(response.data.bmi);
+      setGoal(response.data.goal);
+    } catch (error) {
+      alert("Error saving user data. Please try again.");
+    }
   };
 
   const handlePredictCalories = async () => {
-    const response = await axios.post("http://127.0.0.1:5000/predict_calories", {
-      steps: 5000,
-      workout_minutes: 30,
-      age,
-      weight,
-      bmi,
-    });
-    setCalories(response.data.predicted_calories);
+    if (!bmi) {
+      alert("Please calculate BMI first.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/predict_calories", {
+        steps: 5000,
+        workout_minutes: 30,
+        age: parseFloat(age),
+        weight: parseFloat(weight),
+        bmi: parseFloat(bmi),
+      });
+      setCalories(response.data.predicted_calories);
+    } catch (error) {
+      alert("Error predicting calories. Please try again.");
+    }
   };
 
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Workout Planner</h2>
-      <input type="number" placeholder="Age" onChange={(e) => setAge(e.target.value)} style={styles.input} />
-      <input type="number" placeholder="Weight (kg)" onChange={(e) => setWeight(e.target.value)} style={styles.input} />
-      <input type="number" placeholder="Height (m)" onChange={(e) => setHeight(e.target.value)} style={styles.input} />
+      
+      <input 
+        type="number" 
+        placeholder="Age" 
+        value={age} 
+        onChange={(e) => setAge(e.target.value)} 
+        style={styles.input} 
+      />
+      
+      <input 
+        type="number" 
+        placeholder="Weight (kg)" 
+        value={weight} 
+        onChange={(e) => setWeight(e.target.value)} 
+        style={styles.input} 
+      />
+      
+      <input 
+        type="number" 
+        placeholder="Height (m)" 
+        value={height} 
+        onChange={(e) => setHeight(e.target.value)} 
+        style={styles.input} 
+      />
+      
       <button onClick={handleSaveUser} style={styles.button}>Save User</button>
 
-      {bmi && <p style={styles.text}>BMI: {bmi.toFixed(2)}</p>}
+      {bmi !== null && <p style={styles.text}>BMI: {bmi.toFixed(2)}</p>}
       {goal && <p style={styles.text}>Recommended Goal: {goal}</p>}
 
-      <button onClick={handlePredictCalories} style={styles.button}>Predict Calories Burned</button>
-      {calories && <p style={styles.text}>Predicted Calories Burned: {calories.toFixed(2)} kcal</p>}
+      <button onClick={handlePredictCalories} style={styles.button}>Predict Calories to be Burned</button>
+      
+      {calories !== null && <p style={styles.text}>Predicted Calories to be Burned: {calories.toFixed(2)} kcal</p>}
     </div>
   );
 };
 
-// Inline styles
 const styles = {
   container: {
-    marginTop: "80px", // Push content below navbar
+    marginTop: "80px",
     padding: "20px",
     maxWidth: "400px",
     marginLeft: "auto",
