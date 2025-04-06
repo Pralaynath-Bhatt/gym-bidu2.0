@@ -78,32 +78,31 @@ const MyWorkoutPlan = () => {
       .then((data) => {
         setExercises(data);
         if (data.length > 0) {
-          setExercise_id(data[0]?.exercise_id); // Correctly set exercise_id to the first exercise's exercise_id
+          setExercise_id(data[0]?.exercise_id); // Set exercise_id to the first exercise's exercise_id
+          fetchPreviousWorkoutData(data[0]?.exercise_id); // Fetch previous workout data for the first exercise
         } else {
           setExercise_id(""); // Reset exercise_id if no exercises are found
         }
-        fetchPreviousWorkoutData(day); // Fetch previous workout data
         setLoading(false);
       })
       .catch(() => setError("Error fetching exercises. Please try again later."));
   };
 
-  const fetchPreviousWorkoutData = (day) => {
-    fetch(`http://localhost:8080/api/exercise-log/logs?userId=${localStorage.getItem("userId")}&sessionDate=${new Date().toISOString().split('T')[0]}`, {
+  const fetchPreviousWorkoutData = (exerciseId) => {
+    const userId = localStorage.getItem("userId");
+    fetch(`http://localhost:8080/api/exercise-log/latest?userId=${userId}&exerciseId=${exerciseId}`, {
       method: "GET",
       headers: { Authorization: auth, "Content-Type": "application/json" },
     })
       .then((res) => (res.ok ? res.json() : Promise.reject(res)))
       .then((data) => {
-        const currentLog = data.find(log => log.exercise.id === exercises[currentExerciseIndex]?.id);
-        if (currentLog) {
-          setReps(currentLog.reps);
-          setSets(currentLog.sets);
-          setWeights(currentLog.weight_used);
+        if (data) {
+          setReps(data.reps);
+          setSets(data.sets);
+          setWeights(data.weight_used);
+          console.log(data.weights);
         } else {
-          setReps("");
-          setSets("");
-          setWeights("");
+          resetInputFields(); // Reset fields if no previous data found
         }
       })
       .catch(() => setError("Error fetching previous workout data. Please try again later."));
@@ -114,17 +113,19 @@ const MyWorkoutPlan = () => {
       const newIndex = prev < exercises.length - 1 ? prev + 1 : prev;
       if (exercises[newIndex]) {
         setExercise_id(exercises[newIndex].exercise_id); // Update exercise_id
+        fetchPreviousWorkoutData(exercises[newIndex].exercise_id); // Fetch previous workout data for the new exercise
       }
       return newIndex;
     });
     resetInputFields();
   };
-  
+
   const prevExercise = () => {
     setCurrentExerciseIndex((prev) => {
       const newIndex = prev > 0 ? prev - 1 : prev;
       if (exercises[newIndex]) {
         setExercise_id(exercises[newIndex].exercise_id); // Update exercise_id
+        fetchPreviousWorkoutData(exercises[newIndex].exercise_id); // Fetch previous workout data for the new exercise
       }
       return newIndex;
     });
