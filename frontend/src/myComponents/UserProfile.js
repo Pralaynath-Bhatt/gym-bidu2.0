@@ -52,7 +52,11 @@ const UserProfile = () => {
         }
         return response.json();
       })
-      .then((data) => setUser(data))
+      .then((data) => {setUser(data);
+        localStorage.setItem("userId", data.user_id);
+        console.log("User  ID:", data.user_id); // Log the userId to see if it's being retrieved correctly
+  
+      })
       .catch((error) => {
         setError(error.message);
         console.error("Error fetching user data:", error);
@@ -61,7 +65,7 @@ const UserProfile = () => {
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
-  };
+    };
 
   const handleSubmit = (e) => {
     e.preventDefault();

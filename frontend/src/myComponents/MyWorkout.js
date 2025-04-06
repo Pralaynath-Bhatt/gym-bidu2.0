@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Box, Typography, Button, Card, CircularProgress, Alert } from "@mui/material";
+import { Container, Box, Typography, Button, Card, CircularProgress, Alert, TextField } from "@mui/material";
 import YouTube from "react-youtube";
 
 const MyWorkoutPlan = () => {
@@ -11,6 +11,10 @@ const MyWorkoutPlan = () => {
   const [auth, setAuth] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reps, setReps] = useState("");
+  const [sets, setSets] = useState("");
+  const [weights, setWeights] = useState("");
+  const [exercise_id,setExercise_id] = useState("");
 
   useEffect(() => {
     const username = localStorage.getItem("username");
@@ -61,7 +65,6 @@ const MyWorkoutPlan = () => {
       })
       .catch(() => setError("Error fetching workout days. Please try again later."));
   };
-
   const fetchExercisesForDay = (day) => {
     setSelectedDay(day);
     setCurrentExerciseIndex(0);
@@ -73,19 +76,84 @@ const MyWorkoutPlan = () => {
       .then((res) => (res.ok ? res.json() : Promise.reject(res)))
       .then((data) => {
         setExercises(data);
+        fetchPreviousWorkoutData(day); // Fetch previous workout data
         setLoading(false);
       })
       .catch(() => setError("Error fetching exercises. Please try again later."));
   };
 
+  const fetchPreviousWorkoutData = (day) => {
+    fetch(`http://localhost:8080/api/exercise-log/logs?userId=${localStorage.getItem("userId")}&sessionDate=${new Date().toISOString().split('T')[0]}`, {
+      method: "GET",
+      headers: { Authorization: auth, "Content-Type": "application/json" },
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((data) => {
+        const currentLog = data.find(log => log.exercise.id === exercises[currentExerciseIndex].id);
+        if (currentLog) {
+          setReps(currentLog.reps);
+          setSets(currentLog.sets);
+          setWeights(currentLog.weight_used);
+        } else {
+          setReps("");
+          setSets("");
+          setWeights("");
+        }
+      })
+      .catch(() => setError("Error fetching previous workout data. Please try again later."));
+  };
   const nextExercise = () => {
     setCurrentExerciseIndex((prev) => (prev < exercises.length - 1 ? prev + 1 : prev));
+    resetInputFields();
   };
 
   const prevExercise = () => {
     setCurrentExerciseIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    resetInputFields();
   };
 
+  const resetInputFields = () => {
+    setReps("");
+    setSets("");
+    setWeights("");
+  };
+
+  const saveWorkoutData = () => {
+ // Assuming each exercise has a unique ID
+    const userId = localStorage.getItem("userId"); // Get userId from local storage
+    const workoutData = {
+      userId: parseInt(userId), // Ensure userId is a number
+      exerciseId: parseInt(exercise_id), // Ensure exerciseId is a number
+      sets: parseInt(sets), // Ensure sets is a number
+      reps: parseInt(reps), // Ensure reps is a number
+      weight: parseFloat(weights), // Ensure weight is a number
+    };
+  
+    // Log the workout data to check its structure
+    console.log("Workout Data:", workoutData);
+  
+    fetch(`http://localhost:8080/api/exercise-log/save`, {
+      method: "POST",
+      headers: {
+        Authorization: auth,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(workoutData),
+    })
+      .then((res) => {
+        if (res.ok) {
+          nextExercise(); // Move to the next exercise after saving
+        } else {
+          return res.json().then((errorData) => {
+            throw new Error(errorData.message || "Failed to save workout data");
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error saving workout data:", error);
+        setError("Error saving workout data. Please try again.");
+      });
+  };
   const getYouTubeId = (url) => {
     const match = url.match(/(?:youtube\.com\/.*[?&]v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]+)/);
     return match ? match[1] : null;
@@ -169,14 +237,56 @@ const MyWorkoutPlan = () => {
                 </Box>
               )}
 
+              {/* Input fields for reps, sets, and weights */}
+              <Box sx={{ mt: 2 }}>
+                <TextField
+                  label="Reps"
+                  type="number"
+                  value={reps}
+                  onChange={(e) => setReps(e.target.value)}
+                  variant="outlined"
+                  sx={{ mr: 2 }}
+                />
+                <TextField
+                  label="Sets"
+                  type="number"
+                  value={sets}
+                  onChange={(e) => setSets(e.target.value)}
+                  variant="outlined"
+                  sx={{ mr: 2 }}
+                />
+                <TextField
+                  label="Weight (kg)"
+                  type="number"
+                  value={weights}
+                  onChange={(e) => setWeights(e.target.value)}
+                  variant="outlined"
+                />
+              </Box>
+
               <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={saveWorkoutData}
+                  sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}
+                >
+                  Save
+                </Button>
                 {currentExerciseIndex > 0 && (
-                  <Button variant="contained" sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }} onClick={prevExercise}>
+                  <Button
+                    variant="contained"
+                    onClick={prevExercise}
+                    sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}
+                  >
                     Previous Exercise
                   </Button>
                 )}
                 {currentExerciseIndex < exercises.length - 1 && (
-                  <Button variant="contained" sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }} onClick={nextExercise}>
+                  <Button
+                    variant="contained"
+                    onClick={nextExercise}
+                    sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}
+                  >
                     Next Exercise
                   </Button>
                 )}
