@@ -14,7 +14,7 @@ const MyWorkoutPlan = () => {
   const [reps, setReps] = useState("");
   const [sets, setSets] = useState("");
   const [weights, setWeights] = useState("");
-  const [exercise_id,setExercise_id] = useState("");
+  const [exercise_id, setExercise_id] = useState("");
 
   useEffect(() => {
     const username = localStorage.getItem("username");
@@ -65,6 +65,7 @@ const MyWorkoutPlan = () => {
       })
       .catch(() => setError("Error fetching workout days. Please try again later."));
   };
+
   const fetchExercisesForDay = (day) => {
     setSelectedDay(day);
     setCurrentExerciseIndex(0);
@@ -76,6 +77,11 @@ const MyWorkoutPlan = () => {
       .then((res) => (res.ok ? res.json() : Promise.reject(res)))
       .then((data) => {
         setExercises(data);
+        if (data.length > 0) {
+          setExercise_id(data[0]?.exercise_id); // Correctly set exercise_id to the first exercise's exercise_id
+        } else {
+          setExercise_id(""); // Reset exercise_id if no exercises are found
+        }
         fetchPreviousWorkoutData(day); // Fetch previous workout data
         setLoading(false);
       })
@@ -89,7 +95,7 @@ const MyWorkoutPlan = () => {
     })
       .then((res) => (res.ok ? res.json() : Promise.reject(res)))
       .then((data) => {
-        const currentLog = data.find(log => log.exercise.id === exercises[currentExerciseIndex].id);
+        const currentLog = data.find(log => log.exercise.id === exercises[currentExerciseIndex]?.id);
         if (currentLog) {
           setReps(currentLog.reps);
           setSets(currentLog.sets);
@@ -102,13 +108,26 @@ const MyWorkoutPlan = () => {
       })
       .catch(() => setError("Error fetching previous workout data. Please try again later."));
   };
+
   const nextExercise = () => {
-    setCurrentExerciseIndex((prev) => (prev < exercises.length - 1 ? prev + 1 : prev));
+    setCurrentExerciseIndex((prev) => {
+      const newIndex = prev < exercises.length - 1 ? prev + 1 : prev;
+      if (exercises[newIndex]) {
+        setExercise_id(exercises[newIndex].exercise_id); // Update exercise_id
+      }
+      return newIndex;
+    });
     resetInputFields();
   };
-
+  
   const prevExercise = () => {
-    setCurrentExerciseIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    setCurrentExerciseIndex((prev) => {
+      const newIndex = prev > 0 ? prev - 1 : prev;
+      if (exercises[newIndex]) {
+        setExercise_id(exercises[newIndex].exercise_id); // Update exercise_id
+      }
+      return newIndex;
+    });
     resetInputFields();
   };
 
@@ -119,7 +138,6 @@ const MyWorkoutPlan = () => {
   };
 
   const saveWorkoutData = () => {
- // Assuming each exercise has a unique ID
     const userId = localStorage.getItem("userId"); // Get userId from local storage
     const workoutData = {
       userId: parseInt(userId), // Ensure userId is a number
@@ -128,10 +146,10 @@ const MyWorkoutPlan = () => {
       reps: parseInt(reps), // Ensure reps is a number
       weight: parseFloat(weights), // Ensure weight is a number
     };
-  
+
     // Log the workout data to check its structure
     console.log("Workout Data:", workoutData);
-  
+
     fetch(`http://localhost:8080/api/exercise-log/save`, {
       method: "POST",
       headers: {
@@ -154,6 +172,7 @@ const MyWorkoutPlan = () => {
         setError("Error saving workout data. Please try again.");
       });
   };
+
   const getYouTubeId = (url) => {
     const match = url.match(/(?:youtube\.com\/.*[?&]v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]+)/);
     return match ? match[1] : null;
