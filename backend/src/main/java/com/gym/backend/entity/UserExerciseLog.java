@@ -15,7 +15,8 @@ public class UserExerciseLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long log_id;
+    @Column(name = "log_id")
+    private Long logId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

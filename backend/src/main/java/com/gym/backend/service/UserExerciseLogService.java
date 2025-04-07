@@ -34,7 +34,7 @@ public class UserExerciseLogService {
         Exercise exercise = exerciseRepository.findById(exerciseId)
                 .orElseThrow(() -> new RuntimeException("Exercise not found"));
 
-        return logRepository.findTopByUserAndExerciseOrderByDateDesc(user, exercise);
+        return logRepository.findTopByUserAndExerciseOrderByLogIdDesc(user, exercise);
     }
 
     // Save or update an exercise log

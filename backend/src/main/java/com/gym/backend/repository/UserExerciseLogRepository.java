@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface UserExerciseLogRepository extends JpaRepository<UserExerciseLog, Long> {
 
     // Find the latest log for a user and an exercise
-    Optional<UserExerciseLog> findTopByUserAndExerciseOrderByDateDesc(User user, Exercise exercise);
+    Optional<UserExerciseLog> findTopByUserAndExerciseOrderByLogIdDesc(User user, Exercise exercise);
 
 
     // Find all logs for a user on a given date

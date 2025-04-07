@@ -16,6 +16,13 @@ const MyWorkoutPlan = () => {
   const [weights, setWeights] = useState("");
   const [exercise_id, setExercise_id] = useState("");
 
+  // New state to hold previous workout data
+  const [previousWorkoutData, setPreviousWorkoutData] = useState({
+    reps: "",
+    sets: "",
+    weights: "",
+  });
+
   useEffect(() => {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
@@ -78,10 +85,10 @@ const MyWorkoutPlan = () => {
       .then((data) => {
         setExercises(data);
         if (data.length > 0) {
-          setExercise_id(data[0]?.exercise_id); // Set exercise_id to the first exercise's exercise_id
-          fetchPreviousWorkoutData(data[0]?.exercise_id); // Fetch previous workout data for the first exercise
+          setExercise_id(data[0]?.exercise_id);
+          fetchPreviousWorkoutData(data[0]?.exercise_id);
         } else {
-          setExercise_id(""); // Reset exercise_id if no exercises are found
+          setExercise_id("");
         }
         setLoading(false);
       })
@@ -97,23 +104,28 @@ const MyWorkoutPlan = () => {
       .then((res) => (res.ok ? res.json() : Promise.reject(res)))
       .then((data) => {
         if (data) {
-          setReps(data.reps);
-          setSets(data.sets);
-          setWeights(data.weight_used);
-          console.log(data.weights);
+          // Update the previous workout data state
+          setPreviousWorkoutData({
+            reps: data.reps,
+            sets: data.sets,
+            weights: data.weight_used,
+          });
         } else {
-          resetInputFields(); // Reset fields if no previous data found
+          resetInputFields();
         }
       })
       .catch(() => setError("Error fetching previous workout data. Please try again later."));
   };
 
   const nextExercise = () => {
+    setPreviousWorkoutData.reps="";
+    setPreviousWorkoutData.weight="";
+    setPreviousWorkoutData.sets="";
     setCurrentExerciseIndex((prev) => {
       const newIndex = prev < exercises.length - 1 ? prev + 1 : prev;
       if (exercises[newIndex]) {
-        setExercise_id(exercises[newIndex].exercise_id); // Update exercise_id
-        fetchPreviousWorkoutData(exercises[newIndex].exercise_id); // Fetch previous workout data for the new exercise
+        setExercise_id(exercises[newIndex].exercise_id);
+        fetchPreviousWorkoutData(exercises[newIndex].exercise_id);
       }
       return newIndex;
     });
@@ -124,8 +136,8 @@ const MyWorkoutPlan = () => {
     setCurrentExerciseIndex((prev) => {
       const newIndex = prev > 0 ? prev - 1 : prev;
       if (exercises[newIndex]) {
-        setExercise_id(exercises[newIndex].exercise_id); // Update exercise_id
-        fetchPreviousWorkoutData(exercises[newIndex].exercise_id); // Fetch previous workout data for the new exercise
+        setExercise_id(exercises[newIndex].exercise_id);
+        fetchPreviousWorkoutData(exercises[newIndex].exercise_id);
       }
       return newIndex;
     });
@@ -139,17 +151,14 @@ const MyWorkoutPlan = () => {
   };
 
   const saveWorkoutData = () => {
-    const userId = localStorage.getItem("userId"); // Get userId from local storage
+    const userId = localStorage.getItem("userId");
     const workoutData = {
-      userId: parseInt(userId), // Ensure userId is a number
-      exerciseId: parseInt(exercise_id), // Ensure exerciseId is a number
-      sets: parseInt(sets), // Ensure sets is a number
-      reps: parseInt(reps), // Ensure reps is a number
-      weight: parseFloat(weights), // Ensure weight is a number
+      userId: parseInt(userId),
+      exerciseId: parseInt(exercise_id),
+      sets: parseInt(sets),
+      reps: parseInt(reps),
+      weight: parseFloat(weights),
     };
-
-    // Log the workout data to check its structure
-    console.log("Workout Data:", workoutData);
 
     fetch(`http://localhost:8080/api/exercise-log/save`, {
       method: "POST",
@@ -161,7 +170,7 @@ const MyWorkoutPlan = () => {
     })
       .then((res) => {
         if (res.ok) {
-          nextExercise(); // Move to the next exercise after saving
+          nextExercise();
         } else {
           return res.json().then((errorData) => {
             throw new Error(errorData.message || "Failed to save workout data");
@@ -256,6 +265,20 @@ const MyWorkoutPlan = () => {
                   <YouTube videoId={getYouTubeId(exercises[currentExerciseIndex].youtube_link)} opts={{ width: "100%" }} />
                 </Box>
               )}
+
+              {/* Display previous workout data */}
+              <Box sx={{ mt: 2, mb: 2, padding: 2, border: "1px solid #fff", borderRadius: "8px", backgroundColor: "rgba(255, 255, 255, 0.2)" }}>
+                <Typography variant="h6" sx={{ color: "#fff" }}>Previous Workout Data</Typography>
+                <Typography variant="body1" sx={{ color: "#fff" }}>
+                  <strong>Reps:</strong> {previousWorkoutData.reps || "N/A"}
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#fff" }}>
+                  <strong>Sets:</strong> {previousWorkoutData.sets || "N/A"}
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#fff" }}>
+                  <strong>Weight (kg):</strong> {previousWorkoutData.weights || "N/A"}
+                </Typography>
+              </Box>
 
               {/* Input fields for reps, sets, and weights */}
               <Box sx={{ mt: 2 }}>
