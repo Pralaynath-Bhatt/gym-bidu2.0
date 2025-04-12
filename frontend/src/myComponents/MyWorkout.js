@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Container, Box, Typography, Button, Card, CircularProgress, Alert, TextField } from "@mui/material";
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Card,
+  CircularProgress,
+  Alert,
+  TextField,
+} from "@mui/material";
 import YouTube from "react-youtube";
 
 const MyWorkoutPlan = () => {
@@ -14,15 +23,14 @@ const MyWorkoutPlan = () => {
   const [reps, setReps] = useState("");
   const [sets, setSets] = useState("");
   const [weights, setWeights] = useState("");
-  const [exercise_id, setExercise_id] = useState("");
-
-  // New state to hold previous workout data
+  const [exerciseId, setExerciseId] = useState("");
   const [previousWorkoutData, setPreviousWorkoutData] = useState({
     reps: "",
     sets: "",
     weights: "",
   });
 
+  // Set authentication on page load
   useEffect(() => {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
@@ -34,6 +42,7 @@ const MyWorkoutPlan = () => {
     }
   }, []);
 
+  // Fetch user's workout plan on auth change
   useEffect(() => {
     if (auth) {
       fetchUserPlan();
@@ -85,10 +94,10 @@ const MyWorkoutPlan = () => {
       .then((data) => {
         setExercises(data);
         if (data.length > 0) {
-          setExercise_id(data[0]?.exercise_id);
+          setExerciseId(data[0]?.exercise_id);
           fetchPreviousWorkoutData(data[0]?.exercise_id);
         } else {
-          setExercise_id("");
+          setExerciseId("");
         }
         setLoading(false);
       })
@@ -104,7 +113,6 @@ const MyWorkoutPlan = () => {
       .then((res) => (res.ok ? res.json() : Promise.reject(res)))
       .then((data) => {
         if (data) {
-          // Update the previous workout data state
           setPreviousWorkoutData({
             reps: data.reps,
             sets: data.sets,
@@ -118,13 +126,11 @@ const MyWorkoutPlan = () => {
   };
 
   const nextExercise = () => {
-    setPreviousWorkoutData.reps="";
-    setPreviousWorkoutData.weight="";
-    setPreviousWorkoutData.sets="";
+    setPreviousWorkoutData({ reps: "", sets: "", weights: "" });
     setCurrentExerciseIndex((prev) => {
       const newIndex = prev < exercises.length - 1 ? prev + 1 : prev;
       if (exercises[newIndex]) {
-        setExercise_id(exercises[newIndex].exercise_id);
+        setExerciseId(exercises[newIndex].exercise_id);
         fetchPreviousWorkoutData(exercises[newIndex].exercise_id);
       }
       return newIndex;
@@ -136,7 +142,7 @@ const MyWorkoutPlan = () => {
     setCurrentExerciseIndex((prev) => {
       const newIndex = prev > 0 ? prev - 1 : prev;
       if (exercises[newIndex]) {
-        setExercise_id(exercises[newIndex].exercise_id);
+        setExerciseId(exercises[newIndex].exercise_id);
         fetchPreviousWorkoutData(exercises[newIndex].exercise_id);
       }
       return newIndex;
@@ -154,7 +160,7 @@ const MyWorkoutPlan = () => {
     const userId = localStorage.getItem("userId");
     const workoutData = {
       userId: parseInt(userId),
-      exerciseId: parseInt(exercise_id),
+      exerciseId: parseInt(exerciseId),
       sets: parseInt(sets),
       reps: parseInt(reps),
       weight: parseFloat(weights),
@@ -178,7 +184,6 @@ const MyWorkoutPlan = () => {
         }
       })
       .catch((error) => {
-        console.error("Error saving workout data:", error);
         setError("Error saving workout data. Please try again.");
       });
   };
@@ -189,42 +194,14 @@ const MyWorkoutPlan = () => {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        mt: { xs: 10, sm: 12, md: 14 },
-      }}
-    >
+    <Box sx={{ minHeight: "100vh", background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)", display: "flex", alignItems: "center", justifyContent: "center", mt: { xs: 10, sm: 12, md: 14 } }}>
       <Container maxWidth="md" sx={{ p: 4 }}>
-        <Card
-          sx={{
-            p: 4,
-            textAlign: "center",
-            backdropFilter: "blur(10px)",
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            borderRadius: "20px",
-            boxShadow: "0px 4px 20px rgba(0,0,0,0.2)",
-          }}
-        >
-          <Typography
-            variant="h3"
-            sx={{
-              mb: 2,
-              fontWeight: "bold",
-              color: "#fff",
-              textTransform: "uppercase",
-              letterSpacing: 1,
-            }}
-          >
+        <Card sx={{ p: 4, textAlign: "center", backdropFilter: "blur(10px)", backgroundColor: "rgba(255, 255, 255, 0.1)", borderRadius: "20px", boxShadow: "0px 4px 20px rgba(0,0,0,0.2)" }}>
+          <Typography variant="h3" sx={{ mb: 2, fontWeight: "bold", color: "#fff", textTransform: "uppercase", letterSpacing: 1 }}>
             My Workout Plan
           </Typography>
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
           {loading && <CircularProgress sx={{ my: 3 }} />}
-
           {!loading && !error && days > 0 && (
             <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 1, mb: 3 }}>
               {Array.from({ length: days }, (_, i) => (
@@ -244,95 +221,34 @@ const MyWorkoutPlan = () => {
               ))}
             </Box>
           )}
-
           {!loading && selectedDay && exercises.length > 0 && (
             <Box>
               <Typography variant="h6" sx={{ mt: 2, fontWeight: "bold", color: "#fff" }}>
                 Day {selectedDay} - Exercise {currentExerciseIndex + 1} of {exercises.length}
               </Typography>
-              <Typography variant="body1" sx={{ color: "#fff" }}>
-                <strong>Name:</strong> {exercises[currentExerciseIndex].name}
-              </Typography>
-              <Typography variant="body1" sx={{ color: "#fff" }}>
-                <strong>Muscle Group:</strong> {exercises[currentExerciseIndex].muscle_group}
-              </Typography>
-              <Typography variant="body1" sx={{ color: "#fff" }}>
-                <strong>Target Muscle:</strong> {exercises[currentExerciseIndex].target_muscle}
-              </Typography>
-
+              <Typography variant="body1" sx={{ color: "#fff" }}><strong>Name:</strong> {exercises[currentExerciseIndex].name}</Typography>
+              <Typography variant="body1" sx={{ color: "#fff" }}><strong>Muscle Group:</strong> {exercises[currentExerciseIndex].muscle_group}</Typography>
+              <Typography variant="body1" sx={{ color: "#fff" }}><strong>Target Muscle:</strong> {exercises[currentExerciseIndex].target_muscle}</Typography>
               {exercises[currentExerciseIndex].youtube_link && (
                 <Box sx={{ mt: 2 }}>
                   <YouTube videoId={getYouTubeId(exercises[currentExerciseIndex].youtube_link)} opts={{ width: "100%" }} />
                 </Box>
               )}
-
-              {/* Display previous workout data */}
               <Box sx={{ mt: 2, mb: 2, padding: 2, border: "1px solid #fff", borderRadius: "8px", backgroundColor: "rgba(255, 255, 255, 0.2)" }}>
                 <Typography variant="h6" sx={{ color: "#fff" }}>Previous Workout Data</Typography>
-                <Typography variant="body1" sx={{ color: "#fff" }}>
-                  <strong>Reps:</strong> {previousWorkoutData.reps || "N/A"}
-                </Typography>
-                <Typography variant="body1" sx={{ color: "#fff" }}>
-                  <strong>Sets:</strong> {previousWorkoutData.sets || "N/A"}
-                </Typography>
-                <Typography variant="body1" sx={{ color: "#fff" }}>
-                  <strong>Weight (kg):</strong> {previousWorkoutData.weights || "N/A"}
-                </Typography>
+                <Typography variant="body1" sx={{ color: "#fff" }}><strong>Reps:</strong> {previousWorkoutData.reps || "N/A"}</Typography>
+                <Typography variant="body1" sx={{ color: "#fff" }}><strong>Sets:</strong> {previousWorkoutData.sets || "N/A"}</Typography>
+                <Typography variant="body1" sx={{ color: "#fff" }}><strong>Weight (kg):</strong> {previousWorkoutData.weights || "N/A"}</Typography>
               </Box>
-
-              {/* Input fields for reps, sets, and weights */}
               <Box sx={{ mt: 2 }}>
-                <TextField
-                  label="Reps"
-                  type="number"
-                  value={reps}
-                  onChange={(e) => setReps(e.target.value)}
-                  variant="outlined"
-                  sx={{ mr: 2 }}
-                />
-                <TextField
-                  label="Sets"
-                  type="number"
-                  value={sets}
-                  onChange={(e) => setSets(e.target.value)}
-                  variant="outlined"
-                  sx={{ mr: 2 }}
-                />
-                <TextField
-                  label="Weight (kg)"
-                  type="number"
-                  value={weights}
-                  onChange={(e) => setWeights(e.target.value)}
-                  variant="outlined"
-                />
+                <TextField label="Reps" type="number" value={reps} onChange={(e) => setReps(e.target.value)} variant="outlined" sx={{ mr: 2 }} />
+                <TextField label="Sets" type="number" value={sets} onChange={(e) => setSets(e.target.value)} variant="outlined" sx={{ mr: 2 }} />
+                <TextField label="Weight (kg)" type="number" value={weights} onChange={(e) => setWeights(e.target.value)} variant="outlined" />
               </Box>
-
               <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}>
-                <Button
-                  variant="contained"
-                  onClick={saveWorkoutData}
-                  sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}
-                >
-                  Save
-                </Button>
-                {currentExerciseIndex > 0 && (
-                  <Button
-                    variant="contained"
-                    onClick={prevExercise}
-                    sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}
-                  >
-                    Previous Exercise
-                  </Button>
-                )}
-                {currentExerciseIndex < exercises.length - 1 && (
-                  <Button
-                    variant="contained"
-                    onClick={nextExercise}
-                    sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}
-                  >
-                    Next Exercise
-                  </Button>
-                )}
+                <Button variant="contained" onClick={saveWorkoutData} sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}>Save</Button>
+                {currentExerciseIndex > 0 && <Button variant="contained" onClick={prevExercise} sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}>Previous Exercise</Button>}
+                {currentExerciseIndex < exercises.length - 1 && <Button variant="contained" onClick={nextExercise} sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}>Next Exercise</Button>}
               </Box>
             </Box>
           )}

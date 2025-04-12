@@ -6,6 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="b5d61d71-224f-4c9f-a19f-0c412ebd39d5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/Layout.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/MyWorkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/MyWorkout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/NoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/NoPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/Plans.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/Plans.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/ResponsiveAppBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/ResponsiveAppBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/SignUp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/SignUp.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/UserProfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/UserProfile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/navigation.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/myComponents/piyush.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/myComponents/piyush.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -120,6 +133,11 @@
           <url>jar://$MAVEN_REPOSITORY$/org/springframework/spring-beans/6.2.3/spring-beans-6.2.3.jar!/org/springframework/beans/factory/UnsatisfiedDependencyException.class</url>
           <line>7</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/com/gym/backend/controller/UserController.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

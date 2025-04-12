@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Container, Typography, TextField, Button, MenuItem, Card } from "@mui/material";
+import { Container, Typography, TextField, Button, MenuItem, Card, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+
+const fadeInKeyframes = `
+@keyframes fadeSlideIn {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+`;
 
 const UserProfile = () => {
   const [user, setUser] = useState({
@@ -29,6 +41,7 @@ const UserProfile = () => {
     password: localStorage.getItem("password"),
   });
   const [error, setError] = useState("");
+  const [openModal, setOpenModal] = useState(false); // Modal state
 
   useEffect(() => {
     const username = localStorage.getItem("username");
@@ -52,20 +65,18 @@ const UserProfile = () => {
         }
         return response.json();
       })
-      .then((data) => {setUser(data);
+      .then((data) => {
+        setUser(data);
         localStorage.setItem("userId", data.user_id);
-        console.log("User  ID:", data.user_id); // Log the userId to see if it's being retrieved correctly
-  
       })
       .catch((error) => {
         setError(error.message);
-        console.error("Error fetching user data:", error);
       });
   };
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
-    };
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -85,15 +96,25 @@ const UserProfile = () => {
           return response.json();
         })
         .then(() => {
-          alert("Profile updated successfully");
+          setOpenModal(true); // Show success modal
           setIsEditing(false);
           setError(""); // Clear any previous errors
         })
         .catch((error) => {
           setError(error.message);
-          console.error("Error updating user data:", error);
         });
     }
+  };
+
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = fadeInKeyframes;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -108,7 +129,7 @@ const UserProfile = () => {
         minHeight: "100vh",
       }}
     >
-      <Card sx={{ p: 4, borderRadius: 3, boxShadow: 3, width: "100%", bgcolor: "white" }}>
+      <Card sx={{ p: 4, borderRadius: 3, boxShadow: 3, width: "100%", bgcolor: "white", animation: "fadeSlideIn 1s ease" }}>
         <Typography variant="h5" textAlign="center" sx={{ mb: 2, fontWeight: "bold", color: "#1976d2" }}>
           User Profile
         </Typography>
@@ -197,6 +218,21 @@ const UserProfile = () => {
           </form>
         )}
       </Card>
+
+      {/* Success Modal */}
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>Profile Updated!</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Your profile has been updated successfully. You can now see the changes reflected on your profile.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

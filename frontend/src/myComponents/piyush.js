@@ -1,5 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+
+const fadeInKeyframes = `
+@keyframes fadeSlideIn {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+`;
 
 const Workout = () => {
   const [age, setAge] = useState("");
@@ -8,6 +20,13 @@ const Workout = () => {
   const [bmi, setBmi] = useState(null);
   const [goal, setGoal] = useState("");
   const [calories, setCalories] = useState(null);
+
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = fadeInKeyframes;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
 
   const handleSaveUser = async () => {
     if (!age || !weight || !height) {
@@ -51,39 +70,51 @@ const Workout = () => {
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Workout Planner</h2>
-      
-      <input 
-        type="number" 
-        placeholder="Age" 
-        value={age} 
-        onChange={(e) => setAge(e.target.value)} 
-        style={styles.input} 
-      />
-      
-      <input 
-        type="number" 
-        placeholder="Weight (kg)" 
-        value={weight} 
-        onChange={(e) => setWeight(e.target.value)} 
-        style={styles.input} 
-      />
-      
-      <input 
-        type="number" 
-        placeholder="Height (m)" 
-        value={height} 
-        onChange={(e) => setHeight(e.target.value)} 
-        style={styles.input} 
-      />
-      
-      <button onClick={handleSaveUser} style={styles.button}>Save User</button>
 
-      {bmi !== null && <p style={styles.text}>BMI: {bmi.toFixed(2)}</p>}
-      {goal && <p style={styles.text}>Recommended Goal: {goal}</p>}
+      <input
+        type="number"
+        placeholder="Age"
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
+        style={styles.input}
+      />
 
-      <button onClick={handlePredictCalories} style={styles.button}>Predict Calories to be Burned</button>
-      
-      {calories !== null && <p style={styles.text}>Predicted Calories to be Burned: {calories.toFixed(2)} kcal</p>}
+      <input
+        type="number"
+        placeholder="Weight (kg)"
+        value={weight}
+        onChange={(e) => setWeight(e.target.value)}
+        style={styles.input}
+      />
+
+      <input
+        type="number"
+        placeholder="Height (m)"
+        value={height}
+        onChange={(e) => setHeight(e.target.value)}
+        style={styles.input}
+      />
+
+      <button onClick={handleSaveUser} style={styles.button}>
+        Save User
+      </button>
+
+      {bmi !== null && (
+        <p style={styles.text}>BMI: {bmi.toFixed(2)}</p>
+      )}
+      {goal && (
+        <p style={styles.text}>Recommended Goal: {goal}</p>
+      )}
+
+      <button onClick={handlePredictCalories} style={{ ...styles.button, backgroundColor: "#007bff" }}>
+        Predict Calories to be Burned
+      </button>
+
+      {calories !== null && (
+        <p style={{ ...styles.text, color: "#17a2b8" }}>
+          Predicted Calories to be Burned: {calories.toFixed(2)} kcal
+        </p>
+      )}
     </div>
   );
 };
@@ -91,37 +122,50 @@ const Workout = () => {
 const styles = {
   container: {
     marginTop: "80px",
-    padding: "20px",
+    padding: "30px",
     maxWidth: "400px",
     marginLeft: "auto",
     marginRight: "auto",
-    background: "#f8f9fa",
-    borderRadius: "10px",
-    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-    textAlign: "center"
+    background: "#fefefe",
+    borderRadius: "12px",
+    boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.1)",
+    textAlign: "center",
+    animation: "fadeSlideIn 1s ease"
   },
   heading: {
-    textAlign: "center"
+    fontSize: "1.8rem",
+    marginBottom: "20px",
+    color: "#343a40"
   },
   input: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     margin: "10px 0",
-    border: "1px solid #ccc",
-    borderRadius: "5px"
+    border: "1px solid #ced4da",
+    borderRadius: "6px",
+    fontSize: "1rem",
+    transition: "0.3s",
+    outline: "none",
+    animation: "fadeSlideIn 1s ease"
   },
   button: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     backgroundColor: "#28a745",
-    color: "white",
+    color: "#fff",
     border: "none",
-    borderRadius: "5px",
+    borderRadius: "6px",
     cursor: "pointer",
-    marginTop: "10px"
+    fontWeight: "bold",
+    fontSize: "1rem",
+    marginTop: "15px",
+    animation: "pulse 1.5s infinite ease",
   },
   text: {
-    fontWeight: "bold"
+    marginTop: "10px",
+    fontWeight: "bold",
+    fontSize: "1.1rem",
+    animation: "fadeSlideIn 1s ease"
   }
 };
 

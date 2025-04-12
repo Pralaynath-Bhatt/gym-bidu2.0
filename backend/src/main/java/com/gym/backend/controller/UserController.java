@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User signup", description = "insert name")
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:3000") // Allow frontend requests
+@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.75.1:3000"}) //Allow frontend requests
 public class UserController {
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User loginDetails) {
         if (loginDetails == null || loginDetails.getUsername() == null || loginDetails.getPassword_hash() == null) {

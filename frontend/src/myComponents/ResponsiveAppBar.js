@@ -13,21 +13,37 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
+import { keyframes } from "@emotion/react";
 
 const pages = [
   { id: 1, name: "Home", link: "/" },
   { id: 2, name: "Plans", link: "/plans" },
   { id: 3, name: "My Workout", link: "/myworkout" },
-  { id:4, name: "My Details", link: "/profile"},
-  { id:5, name: "AI Model", link: "/aimodel"},
+  { id: 4, name: "My Details", link: "/profile" },
+  { id: 5, name: "AI Model", link: "/aimodel" },
 ];
 
 const settings = ["Profile", "Logout"];
 
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const spinHover = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const popIn = keyframes`
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+`;
+
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false); // Track login state
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false); // Adjust as per auth
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
@@ -36,20 +52,29 @@ function ResponsiveAppBar() {
 
   return (
     <AppBar
-
       position="fixed"
       sx={{
+        animation: `${fadeIn} 0.6s ease-out`,
         borderRadius: "15px",
         margin: "10px",
         width: "calc(100% - 20px)",
-        backgroundColor: "#333",
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+        backgroundColor: "#222",
+        boxShadow: "0px 6px 25px rgba(0, 0, 0, 0.6)",
       }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* Logo for large screens */}
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          {/* Logo large */}
+          <AdbIcon
+            sx={{
+              display: { xs: "none", md: "flex" },
+              mr: 1,
+              transition: "transform 0.6s",
+              "&:hover": {
+                animation: `${spinHover} 0.8s linear`,
+              },
+            }}
+          />
           <Typography
             variant="h6"
             noWrap
@@ -63,18 +88,25 @@ function ResponsiveAppBar() {
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
+              animation: `${popIn} 0.5s ease`,
             }}
           >
             GYM
           </Typography>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu Button */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="open navigation menu"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{
+                transition: "transform 0.3s ease",
+                "&:hover": {
+                  transform: "scale(1.2)",
+                },
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -82,12 +114,18 @@ function ResponsiveAppBar() {
               anchorEl={anchorElNav}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
+              sx={{
+                display: { xs: "block", md: "none" },
+                animation: `${fadeIn} 0.4s ease`,
+              }}
             >
               {pages.map((page) => (
                 <MenuItem key={page.id} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Link to={page.link} style={{ textDecoration: "none", color: "inherit" }}>
+                    <Link
+                      to={page.link}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
                       {page.name}
                     </Link>
                   </Typography>
@@ -96,10 +134,18 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
 
-          {/* Logo for mobile - Removed "GYM" text */}
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          {/* Mobile logo */}
+          <AdbIcon
+            sx={{
+              display: { xs: "flex", md: "none" },
+              mr: 1,
+              "&:hover": {
+                animation: `${spinHover} 0.8s linear`,
+              },
+            }}
+          />
 
-          {/* Desktop Menu */}
+          {/* Desktop Nav */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
@@ -110,8 +156,30 @@ function ResponsiveAppBar() {
                 sx={{
                   my: 2,
                   color: "white",
-                  display: "block",
-                  "&:hover": { backgroundColor: "#555" },
+                  position: "relative",
+                  fontWeight: 500,
+                  mx: 1,
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    color: "#90caf9",
+                    backgroundColor: "transparent",
+                  },
+                  "&::after": {
+                    content: '""',
+                    position: "absolute",
+                    width: "100%",
+                    transform: "scaleX(0)",
+                    height: "2px",
+                    bottom: 0,
+                    left: 0,
+                    backgroundColor: "#90caf9",
+                    transformOrigin: "bottom right",
+                    transition: "transform 0.3s ease-out",
+                  },
+                  "&:hover::after": {
+                    transform: "scaleX(1)",
+                    transformOrigin: "bottom left",
+                  },
                 }}
               >
                 {page.name}
@@ -119,12 +187,21 @@ function ResponsiveAppBar() {
             ))}
           </Box>
 
-          {/* Login / Sign Up or User Avatar */}
+          {/* Avatar / Auth Buttons */}
           <Box sx={{ flexGrow: 0 }}>
             {isLoggedIn ? (
               <>
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{
+                      p: 0,
+                      transition: "transform 0.5s",
+                      "&:hover": {
+                        transform: "rotate(360deg) scale(1.1)",
+                      },
+                    }}
+                  >
                     <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
                   </IconButton>
                 </Tooltip>
@@ -152,7 +229,11 @@ function ResponsiveAppBar() {
                     borderRadius: "20px",
                     padding: "6px 12px",
                     marginRight: "10px",
-                    "&:hover": { backgroundColor: "#555" },
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      backgroundColor: "#555",
+                      transform: "scale(1.05)",
+                    },
                   }}
                 >
                   Login
@@ -165,7 +246,11 @@ function ResponsiveAppBar() {
                     backgroundColor: "#1976d2",
                     borderRadius: "20px",
                     padding: "6px 12px",
-                    "&:hover": { backgroundColor: "#1565c0" },
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      backgroundColor: "#1565c0",
+                      transform: "scale(1.05)",
+                    },
                   }}
                 >
                   Sign Up

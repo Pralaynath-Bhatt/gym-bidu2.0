@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import HomeCard from "./HomeCard";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -6,8 +7,7 @@ import Col from "react-bootstrap/Col";
 import Fatloss_img from "./image/Fatloss.jpg";
 import Recomp_img from "./image/Recomp.jpg";
 import Weight_gain_img from "./image/weight_gain.jpg";
-import Cardio_img from "./image/Cardio.jpg";
-import ResponsiveAppBar from "./ResponsiveAppBar"
+import ResponsiveAppBar from "./ResponsiveAppBar";
 
 const plans = [
   {
@@ -30,7 +30,7 @@ const plans = [
     description:
       "Body recomposition focuses on losing fat while gaining muscle simultaneously through strength training, protein-rich nutrition, and a slight calorie deficit or maintenance, prioritizing muscle preservation over pure weight loss.",
     image: Recomp_img,
-  }
+  },
 ];
 
 export default function Home() {
@@ -43,9 +43,12 @@ export default function Home() {
         minHeight: "100vh",
       }}
     >
+      <ResponsiveAppBar />
       <Container>
-        <ResponsiveAppBar/>
-        <h1
+        <motion.h1
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
           style={{
             fontSize: "2.5rem",
             fontWeight: "bold",
@@ -54,8 +57,12 @@ export default function Home() {
           }}
         >
           Welcome to Your Fitness Tracker
-        </h1>
-        <p
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
           style={{
             fontSize: "1.2rem",
             color: "#666",
@@ -66,9 +73,12 @@ export default function Home() {
         >
           Choose a plan and achieve your fitness goals with structured workouts
           and proper nutrition.
-        </p>
+        </motion.p>
 
-        <h2
+        <motion.h2
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.7 }}
           style={{
             textAlign: "center",
             fontSize: "2rem",
@@ -77,7 +87,7 @@ export default function Home() {
           }}
         >
           Plans
-        </h2>
+        </motion.h2>
 
         <Row className="justify-content-center">
           {plans.map((plan, index) => (
@@ -88,14 +98,21 @@ export default function Home() {
               lg={4}
               style={{ marginBottom: "20px" }}
             >
-              <HomeCard
-                title={plan.title}
-                text={plan.description}
-                img={plan.image}
-                list0={plan.list[0]}
-                list1={plan.list[1]}
-                list2={plan.list[2]}
-              />
+              <motion.div
+                initial={{ y: 100, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: index * 0.3 }}
+                viewport={{ once: true }}
+              >
+                <HomeCard
+                  title={plan.title}
+                  text={plan.description}
+                  img={plan.image}
+                  list0={plan.list[0]}
+                  list1={plan.list[1]}
+                  list2={plan.list[2]}
+                />
+              </motion.div>
             </Col>
           ))}
         </Row>
