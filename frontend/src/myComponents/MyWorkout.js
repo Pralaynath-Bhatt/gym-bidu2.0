@@ -20,9 +20,9 @@ const MyWorkoutPlan = () => {
   const [auth, setAuth] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [reps, setReps] = useState("");
   const [sets, setSets] = useState("");
-  const [weights, setWeights] = useState("");
+  const [weight, setWeight] = useState("");
+  const [reps, setReps] = useState([""]);
   const [exerciseId, setExerciseId] = useState("");
   const [previousWorkoutData, setPreviousWorkoutData] = useState({
     reps: "",
@@ -30,7 +30,6 @@ const MyWorkoutPlan = () => {
     weights: "",
   });
 
-  // Set authentication on page load
   useEffect(() => {
     const username = localStorage.getItem("username");
     const password = localStorage.getItem("password");
@@ -42,11 +41,8 @@ const MyWorkoutPlan = () => {
     }
   }, []);
 
-  // Fetch user's workout plan on auth change
   useEffect(() => {
-    if (auth) {
-      fetchUserPlan();
-    }
+    if (auth) fetchUserPlan();
   }, [auth]);
 
   const fetchUserPlan = () => {
@@ -125,6 +121,12 @@ const MyWorkoutPlan = () => {
       .catch(() => setError("Error fetching previous workout data. Please try again later."));
   };
 
+  const resetInputFields = () => {
+    setReps([""]);
+    setSets("");
+    setWeight("");
+  };
+
   const nextExercise = () => {
     setPreviousWorkoutData({ reps: "", sets: "", weights: "" });
     setCurrentExerciseIndex((prev) => {
@@ -150,23 +152,60 @@ const MyWorkoutPlan = () => {
     resetInputFields();
   };
 
-  const resetInputFields = () => {
-    setReps("");
-    setSets("");
-    setWeights("");
+  const handleSetsChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (!isNaN(value)) {
+      setSets(value);
+      setReps(Array(value).fill(""));
+    }
   };
+
+  const handleRepsChange = (index, value) => {
+    const newReps = [...reps];
+    newReps[index] = value;
+    setReps(newReps);
+  };
+
+  const handleWeightChange = (e) => {
+    setWeight(e.target.value);
+  };
+
+  const getFinalRepsAndWeight = () => {
+    const numericReps = reps.map((r) => parseInt(r)).filter((r) => !isNaN(r));
+    const avg = numericReps.reduce((a, b) => a + b, 0) / numericReps.length;
+  
+    let finalReps = 8;
+    let newWeight = parseFloat(weight);
+  
+    if (avg < 8) finalReps = 8;
+    else if (avg < 10) finalReps = 10;
+    else if (avg < 12) finalReps = 12;
+    else if (avg < 15) finalReps = 15;
+    else {
+      finalReps = 8;
+      newWeight = parseFloat(weight) + 2.5;
+    }
+  
+    // Update weight state to show the new value in UI
+    setWeight(newWeight.toFixed(1));
+  
+    return { finalReps, newWeight };
+  };
+  
 
   const saveWorkoutData = () => {
     const userId = localStorage.getItem("userId");
+    const { finalReps, newWeight } = getFinalRepsAndWeight();
+  
     const workoutData = {
       userId: parseInt(userId),
       exerciseId: parseInt(exerciseId),
       sets: parseInt(sets),
-      reps: parseInt(reps),
-      weight: parseFloat(weights),
+      reps: finalReps,
+      weight: newWeight,
     };
-
-    fetch(`http://localhost:8080/api/exercise-log/save`, {
+  
+    fetch("http://localhost:8080/api/exercise-log/save", {
       method: "POST",
       headers: {
         Authorization: auth,
@@ -174,19 +213,10 @@ const MyWorkoutPlan = () => {
       },
       body: JSON.stringify(workoutData),
     })
-      .then((res) => {
-        if (res.ok) {
-          nextExercise();
-        } else {
-          return res.json().then((errorData) => {
-            throw new Error(errorData.message || "Failed to save workout data");
-          });
-        }
-      })
-      .catch((error) => {
-        setError("Error saving workout data. Please try again.");
-      });
+      .then(() => nextExercise())
+      .catch(() => setError("Error saving workout data. Please try again."));
   };
+  
 
   const getYouTubeId = (url) => {
     const match = url.match(/(?:youtube\.com\/.*[?&]v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]+)/);
@@ -235,16 +265,42 @@ const MyWorkoutPlan = () => {
                 </Box>
               )}
               <Box sx={{ mt: 2, mb: 2, padding: 2, border: "1px solid #fff", borderRadius: "8px", backgroundColor: "rgba(255, 255, 255, 0.2)" }}>
-                <Typography variant="h6" sx={{ color: "#fff" }}>Previous Workout Data</Typography>
+                <Typography variant="h6" sx={{ color: "#fff" }}>Target Workout</Typography>
                 <Typography variant="body1" sx={{ color: "#fff" }}><strong>Reps:</strong> {previousWorkoutData.reps || "N/A"}</Typography>
                 <Typography variant="body1" sx={{ color: "#fff" }}><strong>Sets:</strong> {previousWorkoutData.sets || "N/A"}</Typography>
                 <Typography variant="body1" sx={{ color: "#fff" }}><strong>Weight (kg):</strong> {previousWorkoutData.weights || "N/A"}</Typography>
               </Box>
-              <Box sx={{ mt: 2 }}>
-                <TextField label="Reps" type="number" value={reps} onChange={(e) => setReps(e.target.value)} variant="outlined" sx={{ mr: 2 }} />
-                <TextField label="Sets" type="number" value={sets} onChange={(e) => setSets(e.target.value)} variant="outlined" sx={{ mr: 2 }} />
-                <TextField label="Weight (kg)" type="number" value={weights} onChange={(e) => setWeights(e.target.value)} variant="outlined" />
-              </Box>
+              <TextField
+                label="Sets"
+                type="number"
+                value={sets}
+                onChange={handleSetsChange}
+                variant="outlined"
+                fullWidth
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Weight (kg)"
+                type="number"
+                value={weight}
+                onChange={handleWeightChange}
+                variant="outlined"
+                fullWidth
+                sx={{ mb: 2 }}
+              />
+              {reps.map((rep, index) => (
+                <TextField
+                  key={index}
+                  label={`Reps for Set ${index + 1}`}
+                  type="number"
+                  value={rep}
+                  onChange={(e) => handleRepsChange(index, e.target.value)}
+                  variant="outlined"
+                  fullWidth
+                  sx={{ mb: 2 }}
+                />
+              ))}
+
               <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}>
                 <Button variant="contained" onClick={saveWorkoutData} sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}>Save</Button>
                 {currentExerciseIndex > 0 && <Button variant="contained" onClick={prevExercise} sx={{ bgcolor: "#1976d2", color: "#fff", "&:hover": { bgcolor: "#115293" } }}>Previous Exercise</Button>}

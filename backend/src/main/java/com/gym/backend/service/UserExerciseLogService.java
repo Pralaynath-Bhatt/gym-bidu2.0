@@ -43,7 +43,7 @@ public class UserExerciseLogService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Exercise exercise = exerciseRepository.findById(exerciseId)
                 .orElseThrow(() -> new RuntimeException("Exercise not found"));
-
+        System.out.println("sets: "+sets +" reps: "+reps+" weights: "+weight);
         UserExerciseLog log = UserExerciseLog.builder()
                 .user(user)
                 .exercise(exercise)
